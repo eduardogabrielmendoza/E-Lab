@@ -433,13 +433,15 @@ interface PortfolioImage {
   url: string
   tag: string
   text: string
+  colorUrl?: string
 }
 
-function PortfolioImageField({ images, onUpload, onRemove, onUpdate }: {
+function PortfolioImageField({ images, onUpload, onColorUpload, onRemove, onUpdate }: {
   images: PortfolioImage[]
   onUpload: () => void
+  onColorUpload: (index: number) => void
   onRemove: (i: number) => void
-  onUpdate: (i: number, field: 'tag' | 'text', value: string) => void
+  onUpdate: (i: number, field: 'tag' | 'text' | 'colorUrl', value: string) => void
 }) {
   return (
     <div>
@@ -447,14 +449,41 @@ function PortfolioImageField({ images, onUpload, onRemove, onUpdate }: {
       <div className="space-y-3">
         {images.map((img, i) => (
           <div key={i} className="flex gap-3 bg-brand-800/50 p-3 border border-brand-700 rounded">
-            <div className="relative w-20 h-20 bg-brand-800 border border-brand-700 overflow-hidden rounded shrink-0 group">
-              <img src={img.url} alt="" className="w-full h-full object-cover" />
-              <button
-                onClick={() => onRemove(i)}
-                className="absolute top-0 right-0 bg-red-600 text-white w-5 h-5 text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-              >
-                ×
-              </button>
+            <div className="shrink-0 space-y-2">
+              {/* Main image */}
+              <div className="relative w-28 h-10 bg-brand-800 border border-brand-700 overflow-hidden rounded group">
+                <img src={img.url} alt="" className="w-full h-full object-contain" />
+                <button
+                  onClick={() => onRemove(i)}
+                  className="absolute top-0 right-0 bg-red-600 text-white w-5 h-5 text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  ×
+                </button>
+              </div>
+              {/* Color version preview */}
+              {img.colorUrl ? (
+                <div className="relative w-28 h-10 bg-brand-800 border border-amber-600/50 overflow-hidden rounded group">
+                  <img src={img.colorUrl} alt="Color" className="w-full h-full object-contain" />
+                  <button
+                    onClick={() => onUpdate(i, 'colorUrl', '')}
+                    className="absolute top-0 right-0 bg-red-600 text-white w-5 h-5 text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    ×
+                  </button>
+                  <span className="absolute bottom-0 left-0 bg-amber-600/80 text-white text-[8px] px-1">COLOR</span>
+                </div>
+              ) : (
+                <button
+                  onClick={() => onColorUpload(i)}
+                  className="w-28 h-10 bg-brand-900 border border-dashed border-amber-600/40 rounded flex items-center justify-center gap-1 text-amber-500/60 hover:text-amber-400 hover:border-amber-500/60 transition-colors"
+                  title="Subir versión a color"
+                >
+                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                  </svg>
+                  <span className="text-[9px]">Color</span>
+                </button>
+              )}
             </div>
             <div className="flex-1 space-y-2">
               <div>
@@ -935,8 +964,14 @@ function PortfolioEditor({ data, onSave, onUpload, saving }: EditorProps) {
             gallery.images.push({ url, tag: defaultTag, text: '' })
             update()
           })}
+          onColorUpload={(index) => onUpload((url) => {
+            if (gallery.images && gallery.images[index]) {
+              gallery.images[index].colorUrl = url
+              update()
+            }
+          })}
           onRemove={(i) => { gallery.images.splice(i, 1); update() }}
-          onUpdate={(i, field, value) => { gallery.images[i][field] = value; update() }}
+          onUpdate={(i, field, value) => { (gallery.images[i] as unknown as Record<string, string>)[field] = value; update() }}
         />
       )}
 
