@@ -15,11 +15,12 @@ interface PortfolioImage {
 export default function PortfolioPage({ data }: { data: any }) {
   const { hero, showcase, gallery } = data
   const [activeTab, setActiveTab] = useState(0)
-  const [lightbox, setLightbox] = useState<{ url: string; text: string } | null>(null)
+  const [lightbox, setLightbox] = useState<{ url: string; text: string; colorUrl?: string } | null>(null)
   const [zoom, setZoom] = useState(1)
   const [pan, setPan] = useState({ x: 0, y: 0 })
   const [dragging, setDragging] = useState(false)
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
+  const [showColor, setShowColor] = useState(false)
 
   const allImages: PortfolioImage[] = (gallery.images || []).filter((img: any) => img && img.url)
   const tabs: string[] = gallery.tabs || []
@@ -32,16 +33,18 @@ export default function PortfolioPage({ data }: { data: any }) {
   const showPlaceholders = gallery.showPlaceholders !== false
   const placeholderCount = displayImages.length === 0 && showPlaceholders ? 12 : 0
 
-  const openLightbox = useCallback((url: string, text: string) => {
-    setLightbox({ url, text })
+  const openLightbox = useCallback((url: string, text: string, colorUrl?: string) => {
+    setLightbox({ url, text, colorUrl })
     setZoom(1)
     setPan({ x: 0, y: 0 })
+    setShowColor(false)
   }, [])
 
   const closeLightbox = useCallback(() => {
     setLightbox(null)
     setZoom(1)
     setPan({ x: 0, y: 0 })
+    setShowColor(false)
   }, [])
 
   useEffect(() => {
@@ -161,7 +164,7 @@ export default function PortfolioPage({ data }: { data: any }) {
                   <div
                     className="relative overflow-hidden bg-brand-800 border border-brand-700 flex items-center justify-center hover:border-brand-500 transition-all duration-300 cursor-pointer"
                     style={{ aspectRatio: '16/9' }}
-                    onClick={() => openLightbox(item.url, item.text || '')}
+                    onClick={() => openLightbox(item.url, item.text || '', item.colorUrl)}
                   >
                     <Image
                       src={item.url}
@@ -180,7 +183,7 @@ export default function PortfolioPage({ data }: { data: any }) {
                   <div className="absolute top-2 right-2 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
                     {/* Zoom / open button */}
                     <button
-                      onClick={(e) => { e.stopPropagation(); openLightbox(item.url, item.text || '') }}
+                      onClick={(e) => { e.stopPropagation(); openLightbox(item.url, item.text || '', item.colorUrl) }}
                       className="w-8 h-8 bg-black/70 backdrop-blur-sm border border-brand-600 flex items-center justify-center text-brand-300 hover:text-white hover:border-brand-400 transition-colors"
                       title="Ver imagen"
                     >
@@ -188,18 +191,6 @@ export default function PortfolioPage({ data }: { data: any }) {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
                       </svg>
                     </button>
-                    {/* Color version button — only if colorUrl exists */}
-                    {item.colorUrl && (
-                      <button
-                        onClick={(e) => { e.stopPropagation(); openLightbox(item.colorUrl!, item.text ? `${item.text} (Color)` : 'Versión a color') }}
-                        className="w-8 h-8 bg-black/70 backdrop-blur-sm border border-brand-600 flex items-center justify-center text-brand-300 hover:text-white hover:border-brand-400 transition-colors"
-                        title="Ver versión a color"
-                      >
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-                        </svg>
-                      </button>
-                    )}
                   </div>
                 </div>
               </FadeIn>
@@ -236,12 +227,30 @@ export default function PortfolioPage({ data }: { data: any }) {
             </svg>
           </button>
 
-          {/* Zoom controls */}
+          {/* Bottom controls bar */}
           <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-brand-800/80 border border-brand-600 px-4 py-2">
             <button onClick={(e) => { e.stopPropagation(); setZoom((z) => Math.max(z - 0.25, 0.5)) }} className="text-white hover:text-brand-300 text-lg font-bold">−</button>
             <span className="text-brand-400 text-xs min-w-[3rem] text-center">{Math.round(zoom * 100)}%</span>
             <button onClick={(e) => { e.stopPropagation(); setZoom((z) => Math.min(z + 0.25, 5)) }} className="text-white hover:text-brand-300 text-lg font-bold">+</button>
             <button onClick={(e) => { e.stopPropagation(); setZoom(1); setPan({ x: 0, y: 0 }) }} className="text-brand-500 hover:text-white text-xs ml-2">Reset</button>
+
+            {/* Color switch — only if colorUrl exists */}
+            {lightbox.colorUrl && (
+              <>
+                <div className="w-px h-5 bg-brand-600 mx-1" />
+                <button
+                  onClick={(e) => { e.stopPropagation(); setShowColor((v) => !v) }}
+                  className="flex items-center gap-2 group/sw"
+                  title={showColor ? 'Ver original' : 'Ver a color'}
+                >
+                  <span className="text-xs text-brand-400 group-hover/sw:text-white transition-colors">B/N</span>
+                  <div className={`relative w-10 h-5 rounded-full transition-colors duration-300 ${showColor ? 'bg-amber-500' : 'bg-brand-600'}`}>
+                    <div className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform duration-300 ${showColor ? 'translate-x-5' : 'translate-x-0'}`} />
+                  </div>
+                  <span className="text-xs text-brand-400 group-hover/sw:text-white transition-colors">Color</span>
+                </button>
+              </>
+            )}
           </div>
 
           {/* Caption */}
@@ -273,6 +282,7 @@ export default function PortfolioPage({ data }: { data: any }) {
                 height: '100%',
               }}
             >
+              {/* Base image (B&W / original) */}
               <Image
                 src={lightbox.url}
                 alt={lightbox.text || 'Imagen del portafolio'}
@@ -281,6 +291,24 @@ export default function PortfolioPage({ data }: { data: any }) {
                 sizes="90vw"
                 priority
               />
+              {/* Color overlay with sweep clip-path */}
+              {lightbox.colorUrl && (
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    clipPath: showColor ? 'inset(0 0 0 0)' : 'inset(0 100% 0 0)',
+                    transition: 'clip-path 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+                  }}
+                >
+                  <Image
+                    src={lightbox.colorUrl}
+                    alt={`${lightbox.text || 'Imagen'} (Color)`}
+                    fill
+                    className="object-contain"
+                    sizes="90vw"
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>
