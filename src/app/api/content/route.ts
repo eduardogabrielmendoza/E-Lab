@@ -7,6 +7,8 @@ import { getSession } from '@/lib/auth'
 const DEFAULT_CONTENT_DIR = path.join(process.cwd(), 'src', 'content')
 const PERSISTENT_DIR = path.join(process.cwd(), 'data', 'content')
 
+const MAX_BODY_SIZE = 512 * 1024 // 512KB max for content JSON
+
 function ensurePersistentDir() {
   if (!existsSync(PERSISTENT_DIR)) {
     mkdirSync(PERSISTENT_DIR, { recursive: true })
@@ -32,11 +34,22 @@ const ALLOWED_FILES = [
   'portfolio.json',
 ]
 
+// Strict validation: only alphanumeric, dashes, dots, and must end in .json
+function isValidFileName(file: string): boolean {
+  return /^[a-zA-Z0-9_-]+\.json$/.test(file) && ALLOWED_FILES.includes(file)
+}
+
+// Verify resolved path is within the expected directory (prevent path traversal)
+function isSafePath(file: string, baseDir: string): boolean {
+  const resolved = path.resolve(baseDir, file)
+  return resolved.startsWith(path.resolve(baseDir) + path.sep)
+}
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const file = searchParams.get('file')
 
-  if (!file || !ALLOWED_FILES.includes(file)) {
+  if (!file || !isValidFileName(file) || !isSafePath(file, PERSISTENT_DIR)) {
     return NextResponse.json({ error: 'Archivo no válido' }, { status: 400 })
   }
 
@@ -60,15 +73,34 @@ export async function PUT(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const file = searchParams.get('file')
 
-  if (!file || !ALLOWED_FILES.includes(file)) {
+  if (!file || !isValidFileName(file) || !isSafePath(file, PERSISTENT_DIR)) {
     return NextResponse.json({ error: 'Archivo no válido' }, { status: 400 })
   }
 
   try {
+    // Check Content-Length before reading body
+    const contentLength = request.headers.get('content-length')
+    if (contentLength && parseInt(contentLength, 10) > MAX_BODY_SIZE) {
+      return NextResponse.json({ error: 'Contenido demasiado grande' }, { status: 413 })
+    }
+
     ensurePersistentDir()
     const body = await request.json()
+
+    // Validate it's a plain object or array (not null, not primitive)
+    if (typeof body !== 'object' || body === null) {
+      return NextResponse.json({ error: 'Formato de datos inválido' }, { status: 400 })
+    }
+
+    const serialized = JSON.stringify(body, null, 2)
+
+    // Double-check size after serialization
+    if (Buffer.byteLength(serialized, 'utf-8') > MAX_BODY_SIZE) {
+      return NextResponse.json({ error: 'Contenido demasiado grande' }, { status: 413 })
+    }
+
     const filePath = path.join(PERSISTENT_DIR, file)
-    await fs.writeFile(filePath, JSON.stringify(body, null, 2), 'utf-8')
+    await fs.writeFile(filePath, serialized, 'utf-8')
     return NextResponse.json({ success: true })
   } catch {
     return NextResponse.json({ error: 'Error al guardar' }, { status: 500 })
