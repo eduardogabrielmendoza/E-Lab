@@ -98,10 +98,11 @@ export default function AdminPage() {
           const data = await res.json()
           onUrl(data.url)
         } else {
-          alert('Error al subir imagen')
+          const errData = await res.json().catch(() => ({}))
+          alert(errData.error || 'Error al subir imagen (HTTP ' + res.status + ')')
         }
-      } catch {
-        alert('Error al subir imagen')
+      } catch (err) {
+        alert('Error al subir imagen: ' + (err instanceof Error ? err.message : String(err)))
       }
     }
     input.click()
@@ -930,7 +931,8 @@ function PortfolioEditor({ data, onSave, onUpload, saving }: EditorProps) {
           images={gallery.images || []}
           onUpload={() => onUpload((url) => {
             if (!gallery.images) gallery.images = []
-            gallery.images.push({ url, tag: '', text: '' })
+            const defaultTag = PORTFOLIO_TAGS[0] || ''
+            gallery.images.push({ url, tag: defaultTag, text: '' })
             update()
           })}
           onRemove={(i) => { gallery.images.splice(i, 1); update() }}
