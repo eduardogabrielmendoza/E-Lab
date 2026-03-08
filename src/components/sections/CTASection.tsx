@@ -1,11 +1,11 @@
 'use client'
 
 import Link from 'next/link'
-import homeData from '@/content/home.json'
 import { SlideUp } from '@/components/animations'
 
-export default function CTASection() {
-  const { cta } = homeData
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export default function CTASection({ data }: { data: any }) {
+  const cta = data
 
   return (
     <section className="py-20 sm:py-28 bg-brand-black relative overflow-hidden">

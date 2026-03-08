@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import PortfolioPage from './PortfolioPage'
+import { getPortfolioContent } from '@/lib/content'
 
 export const metadata: Metadata = {
   title: 'Portafolio | E-LAB',
@@ -7,5 +8,6 @@ export const metadata: Metadata = {
 }
 
 export default function Page() {
-  return <PortfolioPage />
+  const data = getPortfolioContent()
+  return <PortfolioPage data={data} />
 }

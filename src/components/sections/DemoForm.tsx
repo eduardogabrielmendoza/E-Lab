@@ -1,11 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import homeData from '@/content/home.json'
 import { SlideUp, FadeIn } from '@/components/animations'
 
-export default function DemoForm() {
-  const { demoForm } = homeData
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export default function DemoForm({ data }: { data: any }) {
+  const demoForm = data
   const [activeTab, setActiveTab] = useState(0)
 
   return (
@@ -21,7 +21,7 @@ export default function DemoForm() {
         <FadeIn>
           {/* Tabs */}
           <div className="flex flex-wrap justify-center gap-2 mb-8">
-            {demoForm.tabs.map((tab, i) => (
+            {demoForm.tabs.map((tab: string, i: number) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(i)}

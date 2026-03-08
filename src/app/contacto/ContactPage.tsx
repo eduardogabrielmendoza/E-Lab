@@ -1,11 +1,11 @@
 'use client'
 
-import contactData from '@/content/contact.json'
 import { SlideUp, FadeIn, PageTransition } from '@/components/animations'
 import Link from 'next/link'
 
-export default function ContactPage() {
-  const { hero, form, cta } = contactData
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export default function ContactPage({ data }: { data: any }) {
+  const { hero, form, cta } = data
 
   return (
     <PageTransition>

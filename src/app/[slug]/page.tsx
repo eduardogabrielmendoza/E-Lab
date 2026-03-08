@@ -1,17 +1,12 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import categoriesData from '@/content/categories.json'
+import { getCategoriesContent, getHomeContent } from '@/lib/content'
 import CategoryPage from './CategoryPage'
 
 type Props = { params: { slug: string } }
 
-const validSlugs = Object.keys(categoriesData.pages)
-
-export function generateStaticParams() {
-  return validSlugs.map((slug) => ({ slug }))
-}
-
 export function generateMetadata({ params }: Props): Metadata {
+  const categoriesData = getCategoriesContent()
   const page = categoriesData.pages[params.slug as keyof typeof categoriesData.pages]
   if (!page) return {}
   return {
@@ -21,7 +16,9 @@ export function generateMetadata({ params }: Props): Metadata {
 }
 
 export default function Page({ params }: Props) {
+  const categoriesData = getCategoriesContent()
+  const homeData = getHomeContent()
   const page = categoriesData.pages[params.slug as keyof typeof categoriesData.pages]
   if (!page) notFound()
-  return <CategoryPage data={page} slug={params.slug} />
+  return <CategoryPage data={page} slug={params.slug} allPages={categoriesData.pages} homeData={homeData} />
 }

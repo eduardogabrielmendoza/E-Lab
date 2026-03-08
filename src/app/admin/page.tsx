@@ -13,6 +13,7 @@ export default function AdminPage() {
   const [activeSection, setActiveSection] = useState<ActiveSection>('dashboard')
   const [viewMode, setViewMode] = useState<ViewMode>('desktop')
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [previewKey, setPreviewKey] = useState(0)
 
   // Content states
   const [layoutData, setLayoutData] = useState<Record<string, unknown> | null>(null)
@@ -39,7 +40,7 @@ export default function AdminPage() {
   const loadContent = useCallback(async () => {
     const files = ['layout', 'home', 'categories', 'contact', 'order', 'portfolio']
     const setters = [setLayoutData, setHomeData, setCategoriesData, setContactData, setOrderData, setPortfolioData]
-    
+
     await Promise.all(
       files.map(async (file, i) => {
         const res = await fetch(`/api/content?file=${file}.json`)
@@ -66,6 +67,7 @@ export default function AdminPage() {
       })
       if (res.ok) {
         setSaveMessage('Guardado exitosamente')
+        setPreviewKey((k) => k + 1)
         setTimeout(() => setSaveMessage(''), 3000)
       } else {
         setSaveMessage('Error al guardar')
@@ -95,6 +97,8 @@ export default function AdminPage() {
         if (res.ok) {
           const data = await res.json()
           onUrl(data.url)
+        } else {
+          alert('Error al subir imagen')
         }
       } catch {
         alert('Error al subir imagen')
@@ -123,6 +127,17 @@ export default function AdminPage() {
     { key: 'order', label: 'Ordenar' },
     { key: 'portfolio', label: 'Portafolio' },
   ]
+
+  const previewUrls: Record<ActiveSection, string> = {
+    dashboard: '/',
+    header: '/',
+    footer: '/',
+    home: '/',
+    categories: '/logos-corporativos',
+    contact: '/contacto',
+    order: '/ordenar',
+    portfolio: '/portafolio',
+  }
 
   return (
     <div className="min-h-screen bg-brand-900 flex">
@@ -177,6 +192,13 @@ export default function AdminPage() {
                 {saveMessage}
               </span>
             )}
+            <button
+              onClick={() => setPreviewKey((k) => k + 1)}
+              className="text-xs text-brand-400 hover:text-white border border-brand-700 px-3 py-1.5 rounded"
+              title="Refrescar vista previa"
+            >
+              ↻ Refrescar
+            </button>
             {/* View toggle */}
             <div className="flex border border-brand-700 rounded overflow-hidden">
               <button
@@ -213,7 +235,7 @@ export default function AdminPage() {
               <HomeEditor data={homeData} onSave={(d) => { setHomeData(d); saveFile('home', d) }} onUpload={handleImageUpload} saving={saving} />
             )}
             {activeSection === 'categories' && categoriesData && (
-              <CategoriesEditor data={categoriesData} onSave={(d) => { setCategoriesData(d); saveFile('categories', d) }} saving={saving} />
+              <CategoriesEditor data={categoriesData} onSave={(d) => { setCategoriesData(d); saveFile('categories', d) }} onUpload={handleImageUpload} saving={saving} />
             )}
             {activeSection === 'contact' && contactData && (
               <ContactEditor data={contactData} onSave={(d) => { setContactData(d); saveFile('contact', d) }} saving={saving} />
@@ -222,7 +244,7 @@ export default function AdminPage() {
               <OrderEditor data={orderData} onSave={(d) => { setOrderData(d); saveFile('order', d) }} saving={saving} />
             )}
             {activeSection === 'portfolio' && portfolioData && (
-              <PortfolioEditor data={portfolioData} onSave={(d) => { setPortfolioData(d); saveFile('portfolio', d) }} saving={saving} />
+              <PortfolioEditor data={portfolioData} onSave={(d) => { setPortfolioData(d); saveFile('portfolio', d) }} onUpload={handleImageUpload} saving={saving} />
             )}
           </div>
 
@@ -236,9 +258,9 @@ export default function AdminPage() {
                 style={viewMode === 'mobile' ? { border: '8px solid #262626', borderRadius: '24px' } : {}}
               >
                 <iframe
-                  src="/"
+                  src={previewUrls[activeSection]}
                   className="w-full h-full border-0"
-                  key={`${viewMode}-${Date.now()}`}
+                  key={`${viewMode}-${previewKey}`}
                   title="Vista previa"
                 />
               </div>
@@ -250,7 +272,7 @@ export default function AdminPage() {
   )
 }
 
-/* ====================== EDITOR COMPONENTS ====================== */
+/* ====================== SHARED COMPONENTS ====================== */
 
 function DashboardView() {
   return (
@@ -302,7 +324,7 @@ function FieldInput({ label, value, onChange }: { label: string; value: string; 
       <label className="block text-xs font-medium text-brand-400 mb-1.5">{label}</label>
       <input
         type="text"
-        value={value}
+        value={value || ''}
         onChange={(e) => onChange(e.target.value)}
         className="w-full bg-brand-800 border border-brand-700 text-white px-3 py-2 text-sm focus:outline-none focus:border-brand-400 transition-colors"
       />
@@ -315,7 +337,7 @@ function FieldTextarea({ label, value, onChange, rows = 3 }: { label: string; va
     <div>
       <label className="block text-xs font-medium text-brand-400 mb-1.5">{label}</label>
       <textarea
-        value={value}
+        value={value || ''}
         onChange={(e) => onChange(e.target.value)}
         rows={rows}
         className="w-full bg-brand-800 border border-brand-700 text-white px-3 py-2 text-sm focus:outline-none focus:border-brand-400 transition-colors resize-none"
@@ -328,8 +350,72 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
   return <h3 className="text-lg font-bold text-white border-b border-brand-700 pb-2 mb-4">{children}</h3>
 }
 
+/* ---- Image Components ---- */
+
+function ImageField({ label, value, onUpload, onRemove }: { label: string; value: string; onUpload: () => void; onRemove: () => void }) {
+  return (
+    <div>
+      <label className="block text-xs font-medium text-brand-400 mb-1.5">{label}</label>
+      <div className="flex items-center gap-3">
+        {value ? (
+          <div className="relative w-20 h-20 bg-brand-800 border border-brand-700 overflow-hidden rounded">
+            <img src={value} alt="" className="w-full h-full object-cover" />
+          </div>
+        ) : (
+          <div className="w-20 h-20 bg-brand-800 border border-dashed border-brand-600 flex items-center justify-center rounded">
+            <svg className="w-6 h-6 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+        )}
+        <div className="flex flex-col gap-1.5">
+          <button onClick={onUpload} className="text-xs font-medium text-blue-400 hover:text-blue-300 transition-colors">
+            Subir imagen
+          </button>
+          {value && (
+            <button onClick={onRemove} className="text-xs font-medium text-red-400 hover:text-red-300 transition-colors">
+              Eliminar
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function ImageArrayField({ label, images, onUpload, onRemove }: { label: string; images: string[]; onUpload: () => void; onRemove: (i: number) => void }) {
+  return (
+    <div>
+      <label className="block text-xs font-medium text-brand-400 mb-1.5">{label} ({images.length})</label>
+      <div className="flex flex-wrap gap-2">
+        {images.map((img, i) => (
+          <div key={i} className="relative w-20 h-20 bg-brand-800 border border-brand-700 overflow-hidden rounded group">
+            <img src={img} alt="" className="w-full h-full object-cover" />
+            <button
+              onClick={() => onRemove(i)}
+              className="absolute top-0 right-0 bg-red-600 text-white w-5 h-5 text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+            >
+              ×
+            </button>
+          </div>
+        ))}
+        <button
+          onClick={onUpload}
+          className="w-20 h-20 bg-brand-800 border border-dashed border-brand-600 flex items-center justify-center text-brand-500 hover:text-white hover:border-brand-400 transition-colors rounded"
+        >
+          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  )
+}
+
+/* ====================== EDITOR COMPONENTS ====================== */
+
 /* ---- Header Editor ---- */
-function HeaderEditor({ data, onSave, saving }: EditorProps) {
+function HeaderEditor({ data, onSave, onUpload, saving }: EditorProps) {
   const [local, setLocal] = useState(JSON.parse(JSON.stringify(data)))
   const ann = local.announcement as Record<string, unknown>
   const nav = local.nav as Record<string, unknown>
@@ -337,7 +423,7 @@ function HeaderEditor({ data, onSave, saving }: EditorProps) {
   const links = nav.links as Array<Record<string, string>>
   const cta = nav.cta as Record<string, string>
 
-  function update() { setLocal({ ...local }) }
+  function update() { setLocal(JSON.parse(JSON.stringify(local))) }
 
   return (
     <div className="space-y-6">
@@ -356,6 +442,14 @@ function HeaderEditor({ data, onSave, saving }: EditorProps) {
 
       <SectionTitle>Logo</SectionTitle>
       <FieldInput label="Texto del Logo" value={logo.text as string} onChange={(v) => { logo.text = v; update() }} />
+      {onUpload && (
+        <ImageField
+          label="Imagen del Logo"
+          value={(logo.image as string) || ''}
+          onUpload={() => onUpload((url) => { logo.image = url; update() })}
+          onRemove={() => { logo.image = ''; update() }}
+        />
+      )}
 
       <SectionTitle>Links de Navegación</SectionTitle>
       {links.map((link, i) => (
@@ -383,7 +477,7 @@ function FooterEditor({ data, onSave, saving }: EditorProps) {
   const menu = footer.menu as { title: string; links: Array<Record<string, string>> }
   const contact = footer.contact as Record<string, unknown>
 
-  function update() { setLocal({ ...local }) }
+  function update() { setLocal(JSON.parse(JSON.stringify(local))) }
 
   return (
     <div className="space-y-6">
@@ -427,13 +521,15 @@ function FooterEditor({ data, onSave, saving }: EditorProps) {
 function HomeEditor({ data, onSave, onUpload, saving }: EditorProps) {
   const [local, setLocal] = useState(JSON.parse(JSON.stringify(data)))
   const hero = local.hero as Record<string, unknown>
+  const cats = local.categories as { title: string; items: Array<Record<string, unknown>> }
   const howItWorks = local.howItWorks as { title: string; steps: Array<Record<string, string>> }
   const packages = local.packages as { title: string; items: Array<Record<string, unknown>> }
+  const gallery = local.gallery as { title: string; images: string[] }
   const cta = local.cta as Record<string, unknown>
   const demoForm = local.demoForm as Record<string, unknown>
   const faq = local.faq as { title: string; items: Array<Record<string, string>> }
 
-  function update() { setLocal({ ...local }) }
+  function update() { setLocal(JSON.parse(JSON.stringify(local))) }
 
   return (
     <div className="space-y-6">
@@ -442,13 +538,44 @@ function HomeEditor({ data, onSave, onUpload, saving }: EditorProps) {
         <SaveButton onClick={() => onSave(local)} saving={saving} />
       </div>
 
+      {/* Hero */}
       <SectionTitle>Hero</SectionTitle>
       <FieldInput label="Título" value={hero.title as string} onChange={(v) => { hero.title = v; update() }} />
       <FieldTextarea label="Subtítulo" value={hero.subtitle as string} onChange={(v) => { hero.subtitle = v; update() }} />
       <FieldInput label="Badge" value={hero.badge as string} onChange={(v) => { hero.badge = v; update() }} />
       <FieldInput label="CTA 1 Label" value={(hero.cta1 as Record<string, string>).label} onChange={(v) => { (hero.cta1 as Record<string, string>).label = v; update() }} />
+      <FieldInput label="CTA 1 Href" value={(hero.cta1 as Record<string, string>).href} onChange={(v) => { (hero.cta1 as Record<string, string>).href = v; update() }} />
       <FieldInput label="CTA 2 Label" value={(hero.cta2 as Record<string, string>).label} onChange={(v) => { (hero.cta2 as Record<string, string>).label = v; update() }} />
+      <FieldInput label="CTA 2 Href" value={(hero.cta2 as Record<string, string>).href} onChange={(v) => { (hero.cta2 as Record<string, string>).href = v; update() }} />
+      {onUpload && (
+        <ImageArrayField
+          label="Imágenes del Hero (3 imágenes)"
+          images={(hero.images as string[]) || []}
+          onUpload={() => onUpload((url) => { if (!hero.images) hero.images = []; (hero.images as string[]).push(url); update() })}
+          onRemove={(i) => { (hero.images as string[]).splice(i, 1); update() }}
+        />
+      )}
 
+      {/* Categories */}
+      <SectionTitle>Categorías</SectionTitle>
+      <FieldInput label="Título de sección" value={cats.title} onChange={(v) => { cats.title = v; update() }} />
+      {cats.items.map((item, i) => (
+        <div key={i} className="bg-brand-800/50 p-3 space-y-2 border border-brand-700">
+          <FieldInput label="Título" value={item.title as string} onChange={(v) => { item.title = v; update() }} />
+          <FieldInput label="Slug" value={item.slug as string} onChange={(v) => { item.slug = v; update() }} />
+          <FieldTextarea label="Descripción" value={item.description as string} onChange={(v) => { item.description = v; update() }} rows={2} />
+          {onUpload && (
+            <ImageField
+              label="Imagen de categoría"
+              value={(item.image as string) || ''}
+              onUpload={() => onUpload((url) => { item.image = url; update() })}
+              onRemove={() => { item.image = ''; update() }}
+            />
+          )}
+        </div>
+      ))}
+
+      {/* How it works */}
       <SectionTitle>Cómo Funciona</SectionTitle>
       <FieldInput label="Título de sección" value={howItWorks.title} onChange={(v) => { howItWorks.title = v; update() }} />
       {howItWorks.steps.map((step, i) => (
@@ -458,6 +585,7 @@ function HomeEditor({ data, onSave, onUpload, saving }: EditorProps) {
         </div>
       ))}
 
+      {/* Packages */}
       <SectionTitle>Paquetes</SectionTitle>
       <FieldInput label="Título de sección" value={packages.title} onChange={(v) => { packages.title = v; update() }} />
       {packages.items.map((pkg, i) => (
@@ -466,18 +594,38 @@ function HomeEditor({ data, onSave, onUpload, saving }: EditorProps) {
           <FieldInput label="Precio" value={pkg.price as string} onChange={(v) => { pkg.price = v; update() }} />
           <FieldInput label="Descripción" value={pkg.description as string} onChange={(v) => { pkg.description = v; update() }} />
           <FieldTextarea label="Features (una por línea)" value={(pkg.features as string[]).join('\n')} onChange={(v) => { pkg.features = v.split('\n'); update() }} rows={4} />
+          <label className="flex items-center gap-2 text-sm text-brand-300">
+            <input type="checkbox" checked={pkg.popular as boolean} onChange={(e) => { pkg.popular = e.target.checked; update() }} className="accent-white" />
+            Popular (destacado)
+          </label>
         </div>
       ))}
 
+      {/* Gallery */}
+      <SectionTitle>Galería - Trabajos Recientes</SectionTitle>
+      <FieldInput label="Título" value={gallery.title} onChange={(v) => { gallery.title = v; update() }} />
+      {onUpload && (
+        <ImageArrayField
+          label="Imágenes de galería"
+          images={gallery.images || []}
+          onUpload={() => onUpload((url) => { if (!gallery.images) gallery.images = []; gallery.images.push(url); update() })}
+          onRemove={(i) => { gallery.images.splice(i, 1); update() }}
+        />
+      )}
+
+      {/* CTA */}
       <SectionTitle>CTA</SectionTitle>
       <FieldInput label="Título" value={cta.title as string} onChange={(v) => { cta.title = v; update() }} />
       <FieldTextarea label="Descripción" value={cta.description as string} onChange={(v) => { cta.description = v; update() }} />
       <FieldInput label="Botón Label" value={(cta.button as Record<string, string>).label} onChange={(v) => { (cta.button as Record<string, string>).label = v; update() }} />
+      <FieldInput label="Botón Href" value={(cta.button as Record<string, string>).href} onChange={(v) => { (cta.button as Record<string, string>).href = v; update() }} />
 
+      {/* Demo Form */}
       <SectionTitle>Formulario Demo</SectionTitle>
       <FieldInput label="Título" value={demoForm.title as string} onChange={(v) => { demoForm.title = v; update() }} />
       <FieldTextarea label="Subtítulo" value={demoForm.subtitle as string} onChange={(v) => { demoForm.subtitle = v; update() }} />
 
+      {/* FAQ */}
       <SectionTitle>FAQ</SectionTitle>
       <FieldInput label="Título de sección" value={faq.title} onChange={(v) => { faq.title = v; update() }} />
       {faq.items.map((item, i) => (
@@ -493,11 +641,11 @@ function HomeEditor({ data, onSave, onUpload, saving }: EditorProps) {
 }
 
 /* ---- Categories Editor ---- */
-function CategoriesEditor({ data, onSave, saving }: EditorProps) {
+function CategoriesEditor({ data, onSave, onUpload, saving }: EditorProps) {
   const [local, setLocal] = useState(JSON.parse(JSON.stringify(data)))
   const pages = local.pages as Record<string, Record<string, unknown>>
 
-  function update() { setLocal({ ...local }) }
+  function update() { setLocal(JSON.parse(JSON.stringify(local))) }
 
   return (
     <div className="space-y-6">
@@ -518,6 +666,22 @@ function CategoriesEditor({ data, onSave, saving }: EditorProps) {
             onChange={(v) => { page.whatYouGet = v.split('\n'); update() }}
             rows={5}
           />
+          {onUpload && (
+            <>
+              <ImageArrayField
+                label="Imágenes hero de categoría"
+                images={(page.heroImages as string[]) || []}
+                onUpload={() => onUpload((url) => { if (!page.heroImages) page.heroImages = []; (page.heroImages as string[]).push(url); update() })}
+                onRemove={(i) => { (page.heroImages as string[]).splice(i, 1); update() }}
+              />
+              <ImageArrayField
+                label="Galería de categoría"
+                images={(page.gallery as string[]) || []}
+                onUpload={() => onUpload((url) => { if (!page.gallery) page.gallery = []; (page.gallery as string[]).push(url); update() })}
+                onRemove={(i) => { (page.gallery as string[]).splice(i, 1); update() }}
+              />
+            </>
+          )}
         </div>
       ))}
 
@@ -533,7 +697,7 @@ function ContactEditor({ data, onSave, saving }: EditorProps) {
   const form = local.form as Record<string, unknown>
   const cta = local.cta as Record<string, unknown>
 
-  function update() { setLocal({ ...local }) }
+  function update() { setLocal(JSON.parse(JSON.stringify(local))) }
 
   return (
     <div className="space-y-6">
@@ -555,6 +719,7 @@ function ContactEditor({ data, onSave, saving }: EditorProps) {
       <FieldInput label="Título" value={cta.title as string} onChange={(v) => { cta.title = v; update() }} />
       <FieldTextarea label="Descripción" value={cta.description as string} onChange={(v) => { cta.description = v; update() }} />
       <FieldInput label="Botón Label" value={(cta.button as Record<string, string>).label} onChange={(v) => { (cta.button as Record<string, string>).label = v; update() }} />
+      <FieldInput label="Botón Href" value={(cta.button as Record<string, string>).href} onChange={(v) => { (cta.button as Record<string, string>).href = v; update() }} />
 
       <SaveButton onClick={() => onSave(local)} saving={saving} />
     </div>
@@ -568,7 +733,7 @@ function OrderEditor({ data, onSave, saving }: EditorProps) {
   const form = local.form as Record<string, unknown>
   const cta = local.cta as Record<string, unknown>
 
-  function update() { setLocal({ ...local }) }
+  function update() { setLocal(JSON.parse(JSON.stringify(local))) }
 
   return (
     <div className="space-y-6">
@@ -589,6 +754,7 @@ function OrderEditor({ data, onSave, saving }: EditorProps) {
       <FieldInput label="Título" value={cta.title as string} onChange={(v) => { cta.title = v; update() }} />
       <FieldTextarea label="Descripción" value={cta.description as string} onChange={(v) => { cta.description = v; update() }} />
       <FieldInput label="Botón Label" value={(cta.button as Record<string, string>).label} onChange={(v) => { (cta.button as Record<string, string>).label = v; update() }} />
+      <FieldInput label="Botón Href" value={(cta.button as Record<string, string>).href} onChange={(v) => { (cta.button as Record<string, string>).href = v; update() }} />
 
       <SaveButton onClick={() => onSave(local)} saving={saving} />
     </div>
@@ -596,12 +762,13 @@ function OrderEditor({ data, onSave, saving }: EditorProps) {
 }
 
 /* ---- Portfolio Editor ---- */
-function PortfolioEditor({ data, onSave, saving }: EditorProps) {
+function PortfolioEditor({ data, onSave, onUpload, saving }: EditorProps) {
   const [local, setLocal] = useState(JSON.parse(JSON.stringify(data)))
   const hero = local.hero as Record<string, string>
   const showcase = local.showcase as Record<string, unknown>
+  const gallery = local.gallery as { tabs: string[]; images: string[] }
 
-  function update() { setLocal({ ...local }) }
+  function update() { setLocal(JSON.parse(JSON.stringify(local))) }
 
   return (
     <div className="space-y-6">
@@ -617,6 +784,28 @@ function PortfolioEditor({ data, onSave, saving }: EditorProps) {
       <SectionTitle>Showcase</SectionTitle>
       <FieldInput label="Título" value={showcase.title as string} onChange={(v) => { showcase.title = v; update() }} />
       <FieldTextarea label="Descripción" value={showcase.description as string} onChange={(v) => { showcase.description = v; update() }} rows={4} />
+      <FieldTextarea
+        label="Secciones (una por línea)"
+        value={(showcase.sections as string[]).join('\n')}
+        onChange={(v) => { showcase.sections = v.split('\n'); update() }}
+        rows={6}
+      />
+
+      <SectionTitle>Galería</SectionTitle>
+      <FieldTextarea
+        label="Tabs/Filtros (uno por línea)"
+        value={gallery.tabs.join('\n')}
+        onChange={(v) => { gallery.tabs = v.split('\n').filter(Boolean); update() }}
+        rows={3}
+      />
+      {onUpload && (
+        <ImageArrayField
+          label="Imágenes del portafolio"
+          images={gallery.images || []}
+          onUpload={() => onUpload((url) => { if (!gallery.images) gallery.images = []; gallery.images.push(url); update() })}
+          onRemove={(i) => { gallery.images.splice(i, 1); update() }}
+        />
+      )}
 
       <SaveButton onClick={() => onSave(local)} saving={saving} />
     </div>

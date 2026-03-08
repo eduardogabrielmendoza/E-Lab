@@ -1,10 +1,10 @@
 'use client'
 
-import homeData from '@/content/home.json'
 import { SlideUp, StaggerContainer, StaggerItem } from '@/components/animations'
 
-export default function HowItWorks() {
-  const { howItWorks } = homeData
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export default function HowItWorks({ data }: { data: any }) {
+  const howItWorks = data
 
   return (
     <section className="py-20 sm:py-28 bg-brand-900">
@@ -19,7 +19,7 @@ export default function HowItWorks() {
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-6"
           staggerDelay={0.12}
         >
-          {howItWorks.steps.map((step, index) => (
+          {howItWorks.steps.map((step: any, index: number) => (
             <StaggerItem key={step.number}>
               <div className="relative text-center sm:text-left">
                 {/* Number */}

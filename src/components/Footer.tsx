@@ -1,11 +1,11 @@
 'use client'
 
 import Link from 'next/link'
-import layoutData from '@/content/layout.json'
 import { FadeIn, SlideUp } from '@/components/animations'
 
-export default function Footer() {
-  const { footer } = layoutData
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export default function Footer({ data }: { data: any }) {
+  const { footer } = data
 
   return (
     <footer className="bg-brand-900 border-t border-brand-700">
@@ -28,7 +28,7 @@ export default function Footer() {
               {footer.categories.title}
             </h3>
             <ul className="space-y-2.5">
-              {footer.categories.links.map((link) => (
+              {footer.categories.links.map((link: any) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
@@ -47,7 +47,7 @@ export default function Footer() {
               {footer.menu.title}
             </h3>
             <ul className="space-y-2.5">
-              {footer.menu.links.map((link) => (
+              {footer.menu.links.map((link: any) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
@@ -75,7 +75,7 @@ export default function Footer() {
               {footer.contact.email}
             </a>
             <div className="flex gap-4 mt-4">
-              {footer.contact.socials.map((social) => (
+              {footer.contact.socials.map((social: any) => (
                 <a
                   key={social.platform}
                   href={social.url}

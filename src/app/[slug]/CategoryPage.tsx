@@ -1,9 +1,8 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { SlideUp, FadeIn, StaggerContainer, StaggerItem, SlideInLeft, PageTransition } from '@/components/animations'
-import categoriesData from '@/content/categories.json'
-import homeData from '@/content/home.json'
 
 interface CategoryData {
   title: string
@@ -15,9 +14,10 @@ interface CategoryData {
   relatedCategories: string[]
 }
 
-export default function CategoryPage({ data, slug }: { data: CategoryData; slug: string }) {
-  const placeholders = Array.from({ length: 8 }, (_, i) => i + 1)
-  const allPages = categoriesData.pages
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export default function CategoryPage({ data, slug, allPages, homeData }: { data: CategoryData; slug: string; allPages: any; homeData: any }) {
+  const galleryImages = data.gallery || []
+  const placeholders = galleryImages.length > 0 ? galleryImages : Array.from({ length: 8 }, () => '')
 
   return (
     <PageTransition>
@@ -132,7 +132,7 @@ export default function CategoryPage({ data, slug }: { data: CategoryData; slug:
             </h2>
           </SlideUp>
           <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8" staggerDelay={0.1}>
-            {homeData.howItWorks.steps.map((step) => (
+            {homeData.howItWorks.steps.map((step: any) => (
               <StaggerItem key={step.number}>
                 <div className="text-center sm:text-left">
                   <div className="text-5xl font-black text-brand-700/50 leading-none mb-3">
@@ -156,7 +156,7 @@ export default function CategoryPage({ data, slug }: { data: CategoryData; slug:
             </h2>
           </SlideUp>
           <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto" staggerDelay={0.12}>
-            {homeData.packages.items.map((pkg) => (
+            {homeData.packages.items.map((pkg: any) => (
               <StaggerItem key={pkg.name}>
                 <div className={`relative flex flex-col p-6 sm:p-8 border transition-all hover:border-brand-300 ${pkg.popular ? 'border-white bg-brand-900' : 'border-brand-700 bg-brand-900/50'}`}>
                   {pkg.popular && (
@@ -171,7 +171,7 @@ export default function CategoryPage({ data, slug }: { data: CategoryData; slug:
                   </div>
                   <p className="mt-2 text-sm text-brand-400">{pkg.description}</p>
                   <ul className="flex-1 space-y-2.5 mt-6 mb-8">
-                    {pkg.features.map((f, i) => (
+                    {pkg.features.map((f: string, i: number) => (
                       <li key={i} className="flex items-start gap-2.5">
                         <svg className="w-4 h-4 text-white mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -199,7 +199,7 @@ export default function CategoryPage({ data, slug }: { data: CategoryData; slug:
             </h2>
           </SlideUp>
           <div className="space-y-3">
-            {homeData.faq.items.map((item, index) => (
+            {homeData.faq.items.map((item: any, index: number) => (
               <FadeIn key={index} delay={index * 0.05}>
                 <details className="group border border-brand-700">
                   <summary className="flex items-center justify-between p-5 cursor-pointer hover:bg-brand-800/50 transition-colors">

@@ -1,12 +1,12 @@
 'use client'
 
 import Link from 'next/link'
-import homeData from '@/content/home.json'
 import { SlideUp, StaggerContainer, StaggerItem } from '@/components/animations'
 import { cn } from '@/lib/utils'
 
-export default function Packages() {
-  const { packages } = homeData
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export default function Packages({ data }: { data: any }) {
+  const packages = data
 
   return (
     <section id="paquetes" className="py-20 sm:py-28 bg-brand-black">
@@ -21,7 +21,7 @@ export default function Packages() {
           className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-5xl mx-auto"
           staggerDelay={0.15}
         >
-          {packages.items.map((pkg) => (
+          {packages.items.map((pkg: any) => (
             <StaggerItem key={pkg.name}>
               <div
                 className={cn(
@@ -54,7 +54,7 @@ export default function Packages() {
 
                 {/* Features */}
                 <ul className="flex-1 space-y-3 mb-8">
-                  {pkg.features.map((feature, i) => (
+                  {pkg.features.map((feature: string, i: number) => (
                     <li key={i} className="flex items-start gap-3">
                       <svg className="w-4 h-4 text-white mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />

@@ -1,11 +1,11 @@
 'use client'
 
 import Link from 'next/link'
-import orderData from '@/content/order.json'
 import { SlideUp, FadeIn, PageTransition } from '@/components/animations'
 
-export default function OrderPage() {
-  const { hero, form, cta } = orderData
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export default function OrderPage({ data }: { data: any }) {
+  const { hero, form, cta } = data
 
   return (
     <PageTransition>

@@ -7,19 +7,22 @@ import Gallery from '@/components/sections/Gallery'
 import CTASection from '@/components/sections/CTASection'
 import DemoForm from '@/components/sections/DemoForm'
 import FAQ from '@/components/sections/FAQ'
+import { getHomeContent } from '@/lib/content'
 
 export default function HomePage() {
+  const homeData = getHomeContent()
+
   return (
     <>
-      <Hero />
+      <Hero data={homeData.hero} />
       <Marquee />
-      <Categories />
-      <HowItWorks />
-      <Packages />
-      <Gallery />
-      <CTASection />
-      <DemoForm />
-      <FAQ />
+      <Categories data={homeData.categories} />
+      <HowItWorks data={homeData.howItWorks} />
+      <Packages data={homeData.packages} />
+      <Gallery data={homeData.gallery} />
+      <CTASection data={homeData.cta} />
+      <DemoForm data={homeData.demoForm} />
+      <FAQ data={homeData.faq} />
     </>
   )
 }

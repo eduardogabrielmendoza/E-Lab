@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import ContactPage from './ContactPage'
+import { getContactContent } from '@/lib/content'
 
 export const metadata: Metadata = {
   title: 'Contacto | E-LAB',
@@ -7,5 +8,6 @@ export const metadata: Metadata = {
 }
 
 export default function Page() {
-  return <ContactPage />
+  const data = getContactContent()
+  return <ContactPage data={data} />
 }

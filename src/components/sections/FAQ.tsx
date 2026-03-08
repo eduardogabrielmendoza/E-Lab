@@ -2,11 +2,11 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import homeData from '@/content/home.json'
 import { SlideUp, StaggerContainer, StaggerItem } from '@/components/animations'
 
-export default function FAQ() {
-  const { faq } = homeData
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export default function FAQ({ data }: { data: any }) {
+  const faq = data
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   return (
@@ -19,7 +19,7 @@ export default function FAQ() {
         </SlideUp>
 
         <StaggerContainer className="space-y-3" staggerDelay={0.08}>
-          {faq.items.map((item, index) => (
+          {faq.items.map((item: any, index: number) => (
             <StaggerItem key={index}>
               <div className="border border-brand-700 overflow-hidden">
                 <button

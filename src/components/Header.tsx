@@ -3,13 +3,13 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import layoutData from '@/content/layout.json'
 import { cn } from '@/lib/utils'
 
-export default function Header() {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export default function Header({ data }: { data: any }) {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileOpen, setIsMobileOpen] = useState(false)
-  const { announcement, nav } = layoutData
+  const { announcement, nav } = data
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50)
@@ -55,7 +55,7 @@ export default function Header() {
 
             {/* Desktop Nav */}
             <nav className="hidden lg:flex items-center gap-8">
-              {nav.links.map((link) => (
+              {nav.links.map((link: any) => (
                 <Link
                   key={link.href}
                   href={link.href}
@@ -105,7 +105,7 @@ export default function Header() {
               className="lg:hidden bg-brand-black border-t border-brand-700 overflow-hidden"
             >
               <nav className="flex flex-col px-6 py-6 gap-4">
-                {nav.links.map((link, i) => (
+                {nav.links.map((link: any, i: number) => (
                   <motion.div
                     key={link.href}
                     initial={{ opacity: 0, x: -20 }}

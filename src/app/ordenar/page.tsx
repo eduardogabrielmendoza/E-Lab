@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import OrderPage from './OrderPage'
+import { getOrderContent } from '@/lib/content'
 
 export const metadata: Metadata = {
   title: 'Ordenar | E-LAB',
@@ -7,5 +8,6 @@ export const metadata: Metadata = {
 }
 
 export default function Page() {
-  return <OrderPage />
+  const data = getOrderContent()
+  return <OrderPage data={data} />
 }
