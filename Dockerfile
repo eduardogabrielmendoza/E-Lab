@@ -23,6 +23,7 @@ RUN chown nextjs:nodejs .next
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/src/content ./src/content
+RUN mkdir -p data/content && chown nextjs:nodejs data/content
 USER nextjs
 EXPOSE 3000
 ENV PORT 3000

@@ -1,20 +1,17 @@
 {
   "hero": {
-    "title": "HAGAMOS TU LOGOTIPO PERSONALIZADO",
-    "description": "No dejes que una fuente genérica arruine tu imagen profesional. Completa el formulario para convertir la esencia de tu marca en un emblema de alto impacto. Cuéntanos tu historia y nosotros nos encargamos del resto."
+    "title": "Hagamos tu diseño personalizado",
+    "description": "No dejes que una fuente genérica arruine tu imagen profesional, completa el formulario para convertir la esencia de tu marca en un emblema de alto impacto."
   },
   "form": {
-    "fields": {
-      "name": "Tu Nombre *",
-      "country": "País",
-      "email": "Tu Email *"
-    },
-    "submitLabel": "PROCEDER A INFORMACIÓN DEL LOGO",
-    "badge": "Servicio personalizado para cada cliente"
+    "visible": true,
+    "badge": "Servicio personalizado para cada cliente",
+    "whatsappMessage": "Hola! Quiero ordenar un diseño personalizado"
   },
   "cta": {
-    "title": "¿PREFIERES DISCUTIR EL PROYECTO PRIMERO?",
-    "description": "Haz clic en el botón de abajo para llenar un formulario que abrirá la puerta a discutir el proyecto con nosotros si no estás 100% seguro de hacer el pedido.",
-    "button": { "label": "CONVERSEMOS", "href": "/contacto" }
+    "visible": true,
+    "title": "¿Te gustaria discutir sobre tu proyecto primero?",
+    "description": "Clickea en el botón de abajo para llenar un formulario que abrirá la puerta a discutir el proyecto si no estás 100% seguro de hacer el pedido.",
+    "button": { "label": "Conversemos", "href": "https://wa.me/543814463243?text=Hola!%20Me%20gustaria%20discutir%20un%20proyecto" }
   }
 }

@@ -14,15 +14,15 @@ export default function HomePage() {
 
   return (
     <>
-      <Hero data={homeData.hero} />
-      <Marquee />
-      <Categories data={homeData.categories} />
-      <HowItWorks data={homeData.howItWorks} />
-      <Packages data={homeData.packages} />
-      <Gallery data={homeData.gallery} />
-      <CTASection data={homeData.cta} />
-      <DemoForm data={homeData.demoForm} />
-      <FAQ data={homeData.faq} />
+      {homeData.hero.visible !== false && <Hero data={homeData.hero} />}
+      {homeData.marquee?.visible !== false && <Marquee />}
+      {homeData.categories.visible !== false && <Categories data={homeData.categories} />}
+      {homeData.howItWorks.visible !== false && <HowItWorks data={homeData.howItWorks} />}
+      {homeData.packages.visible !== false && <Packages data={homeData.packages} />}
+      {homeData.gallery.visible !== false && <Gallery data={homeData.gallery} />}
+      {homeData.cta.visible !== false && <CTASection data={homeData.cta} />}
+      {homeData.demoForm.visible !== false && <DemoForm data={homeData.demoForm} />}
+      {homeData.faq.visible !== false && <FAQ data={homeData.faq} />}
     </>
   )
 }

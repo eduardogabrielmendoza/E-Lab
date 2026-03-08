@@ -199,7 +199,6 @@ export default function AdminPage() {
             >
               ↻ Refrescar
             </button>
-            {/* View toggle */}
             <div className="flex border border-brand-700 rounded overflow-hidden">
               <button
                 onClick={() => setViewMode('desktop')}
@@ -283,11 +282,11 @@ function DashboardView() {
         {[
           { label: 'Header', desc: 'Logo, navegación y barra de anuncio' },
           { label: 'Footer', desc: 'Links, contacto y redes sociales' },
-          { label: 'Home', desc: 'Hero, categorías, paquetes, FAQ' },
+          { label: 'Home', desc: 'Hero, categorías, paquetes, FAQ y toggles' },
           { label: 'Categorías', desc: 'Páginas de servicios' },
-          { label: 'Contacto', desc: 'Formulario y textos de contacto' },
+          { label: 'Contacto', desc: 'Textos y WhatsApp' },
           { label: 'Ordenar', desc: 'Página de orden' },
-          { label: 'Portafolio', desc: 'Galería y showcase' },
+          { label: 'Portafolio', desc: 'Logofolio con tags y hover text' },
         ].map((item) => (
           <div key={item.label} className="bg-brand-800 border border-brand-700 p-4">
             <h3 className="text-sm font-bold text-white">{item.label}</h3>
@@ -348,6 +347,21 @@ function FieldTextarea({ label, value, onChange, rows = 3 }: { label: string; va
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return <h3 className="text-lg font-bold text-white border-b border-brand-700 pb-2 mb-4">{children}</h3>
+}
+
+function ToggleSwitch({ label, checked, onChange }: { label: string; checked: boolean; onChange: (v: boolean) => void }) {
+  return (
+    <label className="flex items-center justify-between gap-3 py-2 cursor-pointer">
+      <span className="text-sm text-brand-300">{label}</span>
+      <button
+        type="button"
+        onClick={() => onChange(!checked)}
+        className={`relative w-11 h-6 rounded-full transition-colors ${checked ? 'bg-green-500' : 'bg-brand-600'}`}
+      >
+        <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${checked ? 'translate-x-5' : 'translate-x-0'}`} />
+      </button>
+    </label>
+  )
 }
 
 /* ---- Image Components ---- */
@@ -412,6 +426,76 @@ function ImageArrayField({ label, images, onUpload, onRemove }: { label: string;
   )
 }
 
+const PORTFOLIO_TAGS = ['CORPORATIVO', 'BANDAS', 'MINIMALISTA', 'MERCH', 'BRANDING']
+
+interface PortfolioImage {
+  url: string
+  tag: string
+  text: string
+}
+
+function PortfolioImageField({ images, onUpload, onRemove, onUpdate }: {
+  images: PortfolioImage[]
+  onUpload: () => void
+  onRemove: (i: number) => void
+  onUpdate: (i: number, field: 'tag' | 'text', value: string) => void
+}) {
+  return (
+    <div>
+      <label className="block text-xs font-medium text-brand-400 mb-2">Imágenes del Logofolio ({images.length})</label>
+      <div className="space-y-3">
+        {images.map((img, i) => (
+          <div key={i} className="flex gap-3 bg-brand-800/50 p-3 border border-brand-700 rounded">
+            <div className="relative w-20 h-20 bg-brand-800 border border-brand-700 overflow-hidden rounded shrink-0 group">
+              <img src={img.url} alt="" className="w-full h-full object-cover" />
+              <button
+                onClick={() => onRemove(i)}
+                className="absolute top-0 right-0 bg-red-600 text-white w-5 h-5 text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                ×
+              </button>
+            </div>
+            <div className="flex-1 space-y-2">
+              <div>
+                <label className="block text-xs text-brand-500 mb-1">Tag</label>
+                <select
+                  value={img.tag || ''}
+                  onChange={(e) => onUpdate(i, 'tag', e.target.value)}
+                  className="w-full bg-brand-800 border border-brand-700 text-white px-2 py-1.5 text-xs focus:outline-none focus:border-brand-400"
+                >
+                  <option value="">Sin tag</option>
+                  {PORTFOLIO_TAGS.map((t) => (
+                    <option key={t} value={t}>{t}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs text-brand-500 mb-1">Texto hover</label>
+                <input
+                  type="text"
+                  value={img.text || ''}
+                  onChange={(e) => onUpdate(i, 'text', e.target.value)}
+                  placeholder="Texto que aparece al hacer hover"
+                  className="w-full bg-brand-800 border border-brand-700 text-white px-2 py-1.5 text-xs focus:outline-none focus:border-brand-400 placeholder:text-brand-600"
+                />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <button
+        onClick={onUpload}
+        className="mt-3 w-full py-3 bg-brand-800 border border-dashed border-brand-600 flex items-center justify-center gap-2 text-brand-500 hover:text-white hover:border-brand-400 transition-colors rounded text-xs"
+      >
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+        </svg>
+        Agregar imagen al logofolio
+      </button>
+    </div>
+  )
+}
+
 /* ====================== EDITOR COMPONENTS ====================== */
 
 /* ---- Header Editor ---- */
@@ -433,12 +517,9 @@ function HeaderEditor({ data, onSave, onUpload, saving }: EditorProps) {
       </div>
 
       <SectionTitle>Barra de Anuncio</SectionTitle>
+      <ToggleSwitch label="Mostrar barra de anuncio" checked={ann.visible as boolean} onChange={(v) => { ann.visible = v; update() }} />
       <FieldInput label="Texto" value={ann.text as string} onChange={(v) => { ann.text = v; update() }} />
       <FieldInput label="Link" value={ann.link as string} onChange={(v) => { ann.link = v; update() }} />
-      <label className="flex items-center gap-2 text-sm text-brand-300">
-        <input type="checkbox" checked={ann.visible as boolean} onChange={(e) => { ann.visible = e.target.checked; update() }} className="accent-white" />
-        Visible
-      </label>
 
       <SectionTitle>Logo</SectionTitle>
       <FieldInput label="Texto del Logo" value={logo.text as string} onChange={(v) => { logo.text = v; update() }} />
@@ -521,13 +602,14 @@ function FooterEditor({ data, onSave, saving }: EditorProps) {
 function HomeEditor({ data, onSave, onUpload, saving }: EditorProps) {
   const [local, setLocal] = useState(JSON.parse(JSON.stringify(data)))
   const hero = local.hero as Record<string, unknown>
-  const cats = local.categories as { title: string; items: Array<Record<string, unknown>> }
-  const howItWorks = local.howItWorks as { title: string; steps: Array<Record<string, string>> }
-  const packages = local.packages as { title: string; items: Array<Record<string, unknown>> }
-  const gallery = local.gallery as { title: string; images: string[] }
+  const marquee = local.marquee as Record<string, unknown> || { visible: true }
+  const cats = local.categories as { visible?: boolean; title: string; items: Array<Record<string, unknown>> }
+  const howItWorks = local.howItWorks as { visible?: boolean; title: string; steps: Array<Record<string, string>> }
+  const packages = local.packages as { visible?: boolean; title: string; items: Array<Record<string, unknown>> }
+  const gallery = local.gallery as { visible?: boolean; title: string; images: string[] }
   const cta = local.cta as Record<string, unknown>
   const demoForm = local.demoForm as Record<string, unknown>
-  const faq = local.faq as { title: string; items: Array<Record<string, string>> }
+  const faq = local.faq as { visible?: boolean; title: string; items: Array<Record<string, string>> }
 
   function update() { setLocal(JSON.parse(JSON.stringify(local))) }
 
@@ -536,6 +618,20 @@ function HomeEditor({ data, onSave, onUpload, saving }: EditorProps) {
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold text-white">Editar Home</h2>
         <SaveButton onClick={() => onSave(local)} saving={saving} />
+      </div>
+
+      {/* Visibility Toggles */}
+      <SectionTitle>Visibilidad de Secciones</SectionTitle>
+      <div className="bg-brand-800/50 p-4 border border-brand-700 space-y-1">
+        <ToggleSwitch label="Hero" checked={hero.visible !== false} onChange={(v) => { hero.visible = v; update() }} />
+        <ToggleSwitch label="Marquee (cinta animada)" checked={marquee.visible !== false} onChange={(v) => { if (!local.marquee) local.marquee = {}; (local.marquee as Record<string, unknown>).visible = v; update() }} />
+        <ToggleSwitch label="Categorías" checked={cats.visible !== false} onChange={(v) => { cats.visible = v; update() }} />
+        <ToggleSwitch label="¿Cómo funciona?" checked={howItWorks.visible !== false} onChange={(v) => { howItWorks.visible = v; update() }} />
+        <ToggleSwitch label="Paquetes / Precios" checked={packages.visible !== false} onChange={(v) => { packages.visible = v; update() }} />
+        <ToggleSwitch label="Galería Trabajos Recientes" checked={gallery.visible !== false} onChange={(v) => { gallery.visible = v; update() }} />
+        <ToggleSwitch label="CTA - Ordena tu logotipo" checked={(cta.visible as boolean) !== false} onChange={(v) => { cta.visible = v; update() }} />
+        <ToggleSwitch label="Demo / WhatsApp" checked={(demoForm.visible as boolean) !== false} onChange={(v) => { demoForm.visible = v; update() }} />
+        <ToggleSwitch label="FAQ" checked={faq.visible !== false} onChange={(v) => { faq.visible = v; update() }} />
       </div>
 
       {/* Hero */}
@@ -594,6 +690,8 @@ function HomeEditor({ data, onSave, onUpload, saving }: EditorProps) {
           <FieldInput label="Precio" value={pkg.price as string} onChange={(v) => { pkg.price = v; update() }} />
           <FieldInput label="Descripción" value={pkg.description as string} onChange={(v) => { pkg.description = v; update() }} />
           <FieldTextarea label="Features (una por línea)" value={(pkg.features as string[]).join('\n')} onChange={(v) => { pkg.features = v.split('\n'); update() }} rows={4} />
+          <FieldInput label="Botón Label" value={(pkg.cta as Record<string, string>).label} onChange={(v) => { (pkg.cta as Record<string, string>).label = v; update() }} />
+          <FieldInput label="Botón Link (URL WhatsApp o ruta)" value={(pkg.cta as Record<string, string>).href} onChange={(v) => { (pkg.cta as Record<string, string>).href = v; update() }} />
           <label className="flex items-center gap-2 text-sm text-brand-300">
             <input type="checkbox" checked={pkg.popular as boolean} onChange={(e) => { pkg.popular = e.target.checked; update() }} className="accent-white" />
             Popular (destacado)
@@ -618,12 +716,13 @@ function HomeEditor({ data, onSave, onUpload, saving }: EditorProps) {
       <FieldInput label="Título" value={cta.title as string} onChange={(v) => { cta.title = v; update() }} />
       <FieldTextarea label="Descripción" value={cta.description as string} onChange={(v) => { cta.description = v; update() }} />
       <FieldInput label="Botón Label" value={(cta.button as Record<string, string>).label} onChange={(v) => { (cta.button as Record<string, string>).label = v; update() }} />
-      <FieldInput label="Botón Href" value={(cta.button as Record<string, string>).href} onChange={(v) => { (cta.button as Record<string, string>).href = v; update() }} />
+      <FieldInput label="Botón Link (URL WhatsApp o ruta)" value={(cta.button as Record<string, string>).href} onChange={(v) => { (cta.button as Record<string, string>).href = v; update() }} />
 
-      {/* Demo Form */}
-      <SectionTitle>Formulario Demo</SectionTitle>
+      {/* Demo Form / WhatsApp */}
+      <SectionTitle>Demo / WhatsApp</SectionTitle>
       <FieldInput label="Título" value={demoForm.title as string} onChange={(v) => { demoForm.title = v; update() }} />
       <FieldTextarea label="Subtítulo" value={demoForm.subtitle as string} onChange={(v) => { demoForm.subtitle = v; update() }} />
+      <FieldInput label="Mensaje de WhatsApp" value={demoForm.whatsappMessage as string || ''} onChange={(v) => { demoForm.whatsappMessage = v; update() }} />
 
       {/* FAQ */}
       <SectionTitle>FAQ</SectionTitle>
@@ -706,14 +805,20 @@ function ContactEditor({ data, onSave, saving }: EditorProps) {
         <SaveButton onClick={() => onSave(local)} saving={saving} />
       </div>
 
+      <SectionTitle>Visibilidad</SectionTitle>
+      <div className="bg-brand-800/50 p-4 border border-brand-700 space-y-1">
+        <ToggleSwitch label="Sección formulario / WhatsApp" checked={(form.visible as boolean) !== false} onChange={(v) => { form.visible = v; update() }} />
+        <ToggleSwitch label="Sección CTA" checked={(cta.visible as boolean) !== false} onChange={(v) => { cta.visible = v; update() }} />
+      </div>
+
       <SectionTitle>Hero</SectionTitle>
       <FieldInput label="Título" value={hero.title} onChange={(v) => { hero.title = v; update() }} />
       <FieldInput label="Subtítulo" value={hero.subtitle} onChange={(v) => { hero.subtitle = v; update() }} />
 
-      <SectionTitle>Formulario</SectionTitle>
+      <SectionTitle>WhatsApp</SectionTitle>
       <FieldInput label="Título" value={form.title as string} onChange={(v) => { form.title = v; update() }} />
       <FieldTextarea label="Descripción" value={form.description as string} onChange={(v) => { form.description = v; update() }} />
-      <FieldInput label="Nota" value={form.note as string} onChange={(v) => { form.note = v; update() }} />
+      <FieldInput label="Mensaje de WhatsApp" value={form.whatsappMessage as string || ''} onChange={(v) => { form.whatsappMessage = v; update() }} />
 
       <SectionTitle>CTA</SectionTitle>
       <FieldInput label="Título" value={cta.title as string} onChange={(v) => { cta.title = v; update() }} />
@@ -742,19 +847,24 @@ function OrderEditor({ data, onSave, saving }: EditorProps) {
         <SaveButton onClick={() => onSave(local)} saving={saving} />
       </div>
 
+      <SectionTitle>Visibilidad</SectionTitle>
+      <div className="bg-brand-800/50 p-4 border border-brand-700 space-y-1">
+        <ToggleSwitch label="Sección CTA" checked={(cta.visible as boolean) !== false} onChange={(v) => { cta.visible = v; update() }} />
+      </div>
+
       <SectionTitle>Hero</SectionTitle>
       <FieldInput label="Título" value={hero.title} onChange={(v) => { hero.title = v; update() }} />
       <FieldTextarea label="Descripción" value={hero.description} onChange={(v) => { hero.description = v; update() }} />
 
-      <SectionTitle>Formulario</SectionTitle>
-      <FieldInput label="Botón Submit" value={form.submitLabel as string} onChange={(v) => { form.submitLabel = v; update() }} />
+      <SectionTitle>WhatsApp</SectionTitle>
       <FieldInput label="Badge" value={form.badge as string} onChange={(v) => { form.badge = v; update() }} />
+      <FieldInput label="Mensaje de WhatsApp" value={form.whatsappMessage as string || ''} onChange={(v) => { form.whatsappMessage = v; update() }} />
 
       <SectionTitle>CTA</SectionTitle>
       <FieldInput label="Título" value={cta.title as string} onChange={(v) => { cta.title = v; update() }} />
       <FieldTextarea label="Descripción" value={cta.description as string} onChange={(v) => { cta.description = v; update() }} />
       <FieldInput label="Botón Label" value={(cta.button as Record<string, string>).label} onChange={(v) => { (cta.button as Record<string, string>).label = v; update() }} />
-      <FieldInput label="Botón Href" value={(cta.button as Record<string, string>).href} onChange={(v) => { (cta.button as Record<string, string>).href = v; update() }} />
+      <FieldInput label="Botón Link (URL WhatsApp o ruta)" value={(cta.button as Record<string, string>).href} onChange={(v) => { (cta.button as Record<string, string>).href = v; update() }} />
 
       <SaveButton onClick={() => onSave(local)} saving={saving} />
     </div>
@@ -766,7 +876,7 @@ function PortfolioEditor({ data, onSave, onUpload, saving }: EditorProps) {
   const [local, setLocal] = useState(JSON.parse(JSON.stringify(data)))
   const hero = local.hero as Record<string, string>
   const showcase = local.showcase as Record<string, unknown>
-  const gallery = local.gallery as { tabs: string[]; images: string[] }
+  const gallery = local.gallery as { tabs: string[]; images: PortfolioImage[] }
 
   function update() { setLocal(JSON.parse(JSON.stringify(local))) }
 
@@ -775,6 +885,11 @@ function PortfolioEditor({ data, onSave, onUpload, saving }: EditorProps) {
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold text-white">Editar Portafolio</h2>
         <SaveButton onClick={() => onSave(local)} saving={saving} />
+      </div>
+
+      <SectionTitle>Visibilidad</SectionTitle>
+      <div className="bg-brand-800/50 p-4 border border-brand-700 space-y-1">
+        <ToggleSwitch label="Sección Showcase/Descripción" checked={(showcase.visible as boolean) !== false} onChange={(v) => { showcase.visible = v; update() }} />
       </div>
 
       <SectionTitle>Hero</SectionTitle>
@@ -791,19 +906,20 @@ function PortfolioEditor({ data, onSave, onUpload, saving }: EditorProps) {
         rows={6}
       />
 
-      <SectionTitle>Galería</SectionTitle>
-      <FieldTextarea
-        label="Tabs/Filtros (uno por línea)"
-        value={gallery.tabs.join('\n')}
-        onChange={(v) => { gallery.tabs = v.split('\n').filter(Boolean); update() }}
-        rows={3}
-      />
+      <SectionTitle>Galería del Logofolio</SectionTitle>
+      <p className="text-xs text-brand-500 mb-2">
+        Tags disponibles: {PORTFOLIO_TAGS.join(', ')}. Cada imagen necesita un tag para ser filtrada correctamente.
+      </p>
       {onUpload && (
-        <ImageArrayField
-          label="Imágenes del portafolio"
+        <PortfolioImageField
           images={gallery.images || []}
-          onUpload={() => onUpload((url) => { if (!gallery.images) gallery.images = []; gallery.images.push(url); update() })}
+          onUpload={() => onUpload((url) => {
+            if (!gallery.images) gallery.images = []
+            gallery.images.push({ url, tag: '', text: '' })
+            update()
+          })}
           onRemove={(i) => { gallery.images.splice(i, 1); update() }}
+          onUpdate={(i, field, value) => { gallery.images[i][field] = value; update() }}
         />
       )}
 

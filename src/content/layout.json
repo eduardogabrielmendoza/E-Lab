@@ -23,37 +23,37 @@
   },
   "footer": {
     "logo": {
-      "text": "E-LAB",
+      "text": "E-Labs",
       "image": ""
     },
     "description": "Diseñamos logotipos y piezas de diseño gráfico profesionales para cualquier industria. Obtén el tuyo hoy.",
     "categories": {
-      "title": "DISEÑO GRÁFICO",
+      "title": "Diseño Grafico",
       "links": [
-        { "label": "LOGOS CORPORATIVOS", "href": "/logos-corporativos" },
-        { "label": "LOGOS DE BANDAS", "href": "/logos-de-bandas" },
-        { "label": "LOGOS MINIMALISTAS", "href": "/logos-minimalistas" },
-        { "label": "IDENTIDAD VISUAL", "href": "/identidad-visual" },
-        { "label": "DISEÑO DE MERCH", "href": "/diseno-merch" },
-        { "label": "BRANDING COMPLETO", "href": "/branding" }
+        { "label": "Logotipos Corporativos", "href": "/logos-corporativos" },
+        { "label": "Logotipos para Bandas", "href": "/logos-de-bandas" },
+        { "label": "Logotipos Minimalistas", "href": "/logos-minimalistas" },
+        { "label": "Identidad Visual", "href": "/identidad-visual" },
+        { "label": "Merchandising", "href": "/diseno-merch" },
+        { "label": "Branding", "href": "/branding" }
       ]
     },
     "menu": {
       "title": "MENÚ",
       "links": [
-        { "label": "POLÍTICA DE PRIVACIDAD", "href": "/privacidad" },
-        { "label": "TÉRMINOS Y CONDICIONES", "href": "/terminos" }
+        { "label": "Politica de privacidad", "href": "/privacidad" },
+        { "label": "Terminos y condiciones", "href": "/terminos" }
       ]
     },
     "contact": {
       "title": "CONTACTO",
-      "location": "Operando con ❤️ desde Venezuela.",
+      "location": "Gracias por confiar en nosotros",
       "email": "eduardogabrielm3ndoza@gmail.com",
       "socials": [
         { "platform": "Instagram", "url": "#", "icon": "instagram" },
         { "platform": "Behance", "url": "#", "icon": "behance" }
       ]
     },
-    "copyright": "E-LAB © 2026 TODOS LOS DERECHOS RESERVADOS."
+    "copyright": "E-Labs © 2026"
   }
 }

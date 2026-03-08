@@ -1,9 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { promises as fs } from 'fs'
 import path from 'path'
+import { existsSync, mkdirSync, copyFileSync } from 'fs'
 import { getSession } from '@/lib/auth'
 
-const CONTENT_DIR = path.join(process.cwd(), 'src', 'content')
+const DEFAULT_CONTENT_DIR = path.join(process.cwd(), 'src', 'content')
+const PERSISTENT_DIR = path.join(process.cwd(), 'data', 'content')
+
+function ensurePersistentDir() {
+  if (!existsSync(PERSISTENT_DIR)) {
+    mkdirSync(PERSISTENT_DIR, { recursive: true })
+  }
+}
+
+function ensureFile(file: string) {
+  const persistentPath = path.join(PERSISTENT_DIR, file)
+  if (!existsSync(persistentPath)) {
+    const defaultPath = path.join(DEFAULT_CONTENT_DIR, file)
+    if (existsSync(defaultPath)) {
+      copyFileSync(defaultPath, persistentPath)
+    }
+  }
+}
 
 const ALLOWED_FILES = [
   'layout.json',
@@ -23,7 +41,9 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const filePath = path.join(CONTENT_DIR, file)
+    ensurePersistentDir()
+    ensureFile(file)
+    const filePath = path.join(PERSISTENT_DIR, file)
     const content = await fs.readFile(filePath, 'utf-8')
     return NextResponse.json(JSON.parse(content))
   } catch {
@@ -45,8 +65,9 @@ export async function PUT(request: NextRequest) {
   }
 
   try {
+    ensurePersistentDir()
     const body = await request.json()
-    const filePath = path.join(CONTENT_DIR, file)
+    const filePath = path.join(PERSISTENT_DIR, file)
     await fs.writeFile(filePath, JSON.stringify(body, null, 2), 'utf-8')
     return NextResponse.json({ success: true })
   } catch {

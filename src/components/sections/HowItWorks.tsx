@@ -27,9 +27,9 @@ export default function HowItWorks({ data }: { data: any }) {
                   {step.number}
                 </div>
 
-                {/* Connector line (desktop) */}
+                {/* Connector line (desktop) - positioned between columns */}
                 {index < howItWorks.steps.length - 1 && (
-                  <div className="hidden lg:block absolute top-8 left-full w-full h-px bg-brand-700 -translate-x-1/2" />
+                  <div className="hidden lg:block absolute top-9 left-[calc(100%+4px)] w-[calc(1.5rem-8px)] h-px bg-brand-600" />
                 )}
 
                 <h3 className="text-base font-bold text-white tracking-wide mb-2">

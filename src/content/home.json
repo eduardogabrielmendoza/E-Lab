@@ -1,47 +1,52 @@
 {
   "hero": {
-    "title": "LOGOTIPOS Y DISEÑO GRÁFICO 100% ORIGINALES.",
-    "subtitle": "Sin plantillas. Sin IA. Diseño hecho a mano por profesionales que entienden tu visión.",
-    "cta1": { "label": "VER PRECIOS", "href": "#paquetes" },
-    "cta2": { "label": "ORDENAR AHORA", "href": "/ordenar" },
-    "badge": "Diseño profesional a tu alcance",
+    "visible": true,
+    "title": "Logotipos y diseño grafico 100% originales.",
+    "subtitle": "Sin plantillas, sin IA, diseños hecho a mano que comprenden tu visión.",
+    "cta1": { "label": "Ver Precios", "href": "#paquetes" },
+    "cta2": { "label": "Ordenar Ahora", "href": "/ordenar" },
+    "badge": "Diseños de alta calidad a tu alcance",
     "images": []
   },
+  "marquee": {
+    "visible": true
+  },
   "categories": {
-    "title": "EXPLORA NUESTROS SERVICIOS",
+    "visible": true,
+    "title": "Explora los servicios",
     "items": [
       {
-        "title": "LOGOS CORPORATIVOS",
+        "title": "Logotipos Corporativos",
         "slug": "logos-corporativos",
         "image": "",
-        "description": "Logotipos profesionales para empresas y marcas."
+        "description": "Logotipos para empresas y marcas."
       },
       {
-        "title": "LOGOS DE BANDAS",
+        "title": "Logotipos para Bandas",
         "slug": "logos-de-bandas",
         "image": "",
-        "description": "Logotipos únicos para bandas y músicos."
+        "description": "Logotipos únicos para bandas y artistas."
       },
       {
-        "title": "LOGOS MINIMALISTAS",
+        "title": "Logotipos Minimalistas",
         "slug": "logos-minimalistas",
         "image": "",
         "description": "Diseños limpios y modernos con impacto visual."
       },
       {
-        "title": "IDENTIDAD VISUAL",
+        "title": "Identidad Visual",
         "slug": "identidad-visual",
         "image": "",
         "description": "Sistemas completos de identidad de marca."
       },
       {
-        "title": "DISEÑO DE MERCH",
+        "title": "Merchandising",
         "slug": "diseno-merch",
         "image": "",
         "description": "Diseños para camisetas, hoodies y merchandise."
       },
       {
-        "title": "BRANDING COMPLETO",
+        "title": "Branding",
         "slug": "branding",
         "image": "",
         "description": "Paquetes completos de branding para tu negocio."
@@ -49,36 +54,38 @@
     ]
   },
   "howItWorks": {
-    "title": "¿CÓMO FUNCIONA?",
+    "visible": true,
+    "title": "¿Como funciona?",
     "steps": [
       {
         "number": "01",
-        "title": "CUÉNTANOS TU VISIÓN",
-        "description": "Completa el formulario con los detalles de tu proyecto. Cuéntanos sobre tu marca, estilo y preferencias."
+        "title": "Expresa tu vision",
+        "description": "Completa el formulario con los detalles de tu proyecto."
       },
       {
         "number": "02",
-        "title": "DISEÑAMOS PROPUESTAS",
-        "description": "Nuestro equipo crea conceptos iniciales basados en tu brief. Recibirás múltiples opciones para elegir."
+        "title": "Diseño de propuesta",
+        "description": "Conceptos iniciales basados en tu brief, recibirás múltiples opciones para elegir."
       },
       {
         "number": "03",
-        "title": "REVISIONES",
-        "description": "Trabajamos contigo para refinar el diseño hasta que estés completamente satisfecho con el resultado."
+        "title": "Revisiones",
+        "description": "Trabajamos juntos para refinar el diseño hasta que estés completamente satisfecho con el resultado."
       },
       {
         "number": "04",
-        "title": "ENTREGA FINAL",
-        "description": "Recibes todos los archivos en múltiples formatos listos para usar en cualquier plataforma."
+        "title": "Entrega",
+        "description": "Recibiras todos los archivos en múltiples formatos listos para usar en cualquier plataforma."
       }
     ]
   },
   "packages": {
-    "title": "ELIGE TU PAQUETE",
+    "visible": true,
+    "title": "Selecciona tu paquete",
     "items": [
       {
-        "name": "BÁSICO",
-        "price": "$99",
+        "name": "Basico",
+        "price": "$40.000",
         "description": "Perfecto para comenzar",
         "features": [
           "1 concepto de logo",
@@ -87,13 +94,13 @@
           "Entrega en 5 días",
           "Fondo transparente"
         ],
-        "cta": { "label": "ORDENAR", "href": "/ordenar" },
+        "cta": { "label": "ORDENAR", "href": "https://wa.me/543814463243?text=Hola!%20Me%20interesa%20el%20paquete%20Basico" },
         "popular": false
       },
       {
-        "name": "PROFESIONAL",
-        "price": "$199",
-        "description": "El más popular",
+        "name": "Profesional",
+        "price": "$60.000",
+        "description": "El adecuado",
         "features": [
           "3 conceptos de logo",
           "5 revisiones",
@@ -103,13 +110,13 @@
           "Mockup de camiseta",
           "Wallpapers para redes"
         ],
-        "cta": { "label": "ORDENAR", "href": "/ordenar" },
+        "cta": { "label": "ORDENAR", "href": "https://wa.me/543814463243?text=Hola!%20Me%20interesa%20el%20paquete%20Profesional" },
         "popular": true
       },
       {
-        "name": "PREMIUM",
-        "price": "$349",
-        "description": "La experiencia completa",
+        "name": "Premium",
+        "price": "$80.000",
+        "description": "Experiencia completa",
         "features": [
           "5 conceptos de logo",
           "Revisiones ilimitadas",
@@ -121,32 +128,31 @@
           "Licencia comercial",
           "Guía de marca básica"
         ],
-        "cta": { "label": "ORDENAR", "href": "/ordenar" },
+        "cta": { "label": "ORDENAR", "href": "https://wa.me/543814463243?text=Hola!%20Me%20interesa%20el%20paquete%20Premium" },
         "popular": false
       }
     ]
   },
   "gallery": {
+    "visible": true,
     "title": "TRABAJOS RECIENTES",
     "images": []
   },
   "cta": {
-    "title": "SIN CLIPART. SIN PLANTILLAS. DISEÑO GRÁFICO REAL.",
-    "description": "Servicios de diseño de logotipos profesionales. Ordena y obtén tu nuevo logotipo diseñado por profesionales.",
-    "button": { "label": "ORDENA TU LOGOTIPO", "href": "/ordenar" }
+    "visible": true,
+    "title": "Sin clipart, sin plantillas, diseño grafico real.",
+    "description": "Servicios de diseño de logotipos profesionales, ordena tu nuevo logotipo.",
+    "button": { "label": "Ordena tu logotipo", "href": "https://wa.me/543814463243?text=Hola!%20Quiero%20ordenar%20un%20logotipo" }
   },
   "demoForm": {
-    "title": "¿QUIERES VER UN DEMO?",
-    "subtitle": "Envíanos el nombre de tu proyecto y te mostraremos lo que podemos hacer.",
-    "tabs": ["LOGO CORPORATIVO", "LOGO DE BANDA", "IDENTIDAD VISUAL", "BRANDING"],
-    "fields": {
-      "name": "Nombre / Empresa *",
-      "email": "Tu Email *"
-    },
-    "submitLabel": "ENVIAR"
+    "visible": true,
+    "title": "¿Te gustaria ver un demo?",
+    "subtitle": "Envía el nombre de tu proyecto y veras lo que podemos hacer.",
+    "whatsappMessage": "Hola! Me gustaria ver un demo de logotipo para mi proyecto"
   },
   "faq": {
-    "title": "PREGUNTAS FRECUENTES",
+    "visible": true,
+    "title": "Preguntas Frecuentes",
     "items": [
       {
         "question": "¿Cuánto tiempo toma el proceso de diseño?",
