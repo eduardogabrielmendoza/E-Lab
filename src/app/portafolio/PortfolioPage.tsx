@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import { SlideUp, FadeIn, StaggerContainer, StaggerItem, PageTransition } from '@/components/animations'
+import { SlideUp, FadeIn, PageTransition } from '@/components/animations'
 
 interface PortfolioImage {
   url: string
@@ -90,12 +90,11 @@ export default function PortfolioPage({ data }: { data: any }) {
           </FadeIn>
 
           {/* Grid */}
-          <StaggerContainer
+          <div
             className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4"
-            staggerDelay={0.04}
           >
             {displayImages.map((item, idx) => (
-              <StaggerItem key={`img-${idx}`}>
+              <FadeIn key={`img-${idx}`}>
                 <div className="break-inside-avoid mb-4 group cursor-pointer">
                   <div
                     className="relative overflow-hidden bg-brand-800 border border-brand-700 flex items-center justify-center hover:border-brand-500 transition-all duration-300"
@@ -109,10 +108,10 @@ export default function PortfolioPage({ data }: { data: any }) {
                     </div>
                   </div>
                 </div>
-              </StaggerItem>
+              </FadeIn>
             ))}
             {Array.from({ length: placeholderCount }, (_, idx) => (
-              <StaggerItem key={`ph-${idx}`}>
+              <FadeIn key={`ph-${idx}`}>
                 <div className="break-inside-avoid mb-4">
                   <div
                     className="relative overflow-hidden bg-brand-800 border border-brand-700 flex items-center justify-center"
@@ -123,9 +122,9 @@ export default function PortfolioPage({ data }: { data: any }) {
                     </svg>
                   </div>
                 </div>
-              </StaggerItem>
+              </FadeIn>
             ))}
-          </StaggerContainer>
+          </div>
         </div>
       </section>
     </PageTransition>
