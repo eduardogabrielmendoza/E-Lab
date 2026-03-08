@@ -756,6 +756,20 @@ function HomeEditor({ data, onSave, onUpload, saving }: EditorProps) {
       <div className="bg-brand-800/50 p-4 border border-brand-700 space-y-1">
         <ToggleSwitch label="Hero" checked={hero.visible !== false} onChange={(v) => { hero.visible = v; update() }} />
         <ToggleSwitch label="Marquee (cinta animada)" checked={marquee.visible !== false} onChange={(v) => { if (!local.marquee) local.marquee = {}; (local.marquee as Record<string, unknown>).visible = v; update() }} />
+        {marquee.visible !== false && (
+          <div className="ml-4 space-y-2 border-l-2 border-brand-700 pl-4 mt-1">
+            <div>
+              <label className="block text-xs text-brand-500 mb-1">Velocidad Desktop: {(marquee as Record<string, unknown>).desktopSpeed as number || 30}s</label>
+              <input type="range" min={5} max={120} step={1} value={(marquee as Record<string, unknown>).desktopSpeed as number || 30} onChange={(e) => { (marquee as Record<string, unknown>).desktopSpeed = Number(e.target.value); update() }} className="w-full accent-white h-1.5" />
+              <div className="flex justify-between text-[10px] text-brand-600"><span>Rápido (5s)</span><span>Lento (120s)</span></div>
+            </div>
+            <div>
+              <label className="block text-xs text-brand-500 mb-1">Velocidad Mobile: {(marquee as Record<string, unknown>).mobileSpeed as number || 20}s</label>
+              <input type="range" min={5} max={120} step={1} value={(marquee as Record<string, unknown>).mobileSpeed as number || 20} onChange={(e) => { (marquee as Record<string, unknown>).mobileSpeed = Number(e.target.value); update() }} className="w-full accent-white h-1.5" />
+              <div className="flex justify-between text-[10px] text-brand-600"><span>Rápido (5s)</span><span>Lento (120s)</span></div>
+            </div>
+          </div>
+        )}
         <ToggleSwitch label="Categorías" checked={cats.visible !== false} onChange={(v) => { cats.visible = v; update() }} />
         <ToggleSwitch label="¿Cómo funciona?" checked={howItWorks.visible !== false} onChange={(v) => { howItWorks.visible = v; update() }} />
         <ToggleSwitch label="Paquetes / Precios" checked={packages.visible !== false} onChange={(v) => { packages.visible = v; update() }} />

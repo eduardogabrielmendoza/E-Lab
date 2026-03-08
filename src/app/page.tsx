@@ -16,13 +16,17 @@ export default function HomePage() {
   const portfolioData = getPortfolioContent()
   const marqueeLogos = (portfolioData?.gallery?.images || [])
     .filter((img: { tag?: string; url?: string }) =>
-      img?.url && img?.tag && !['MERCH', 'BRANDING'].includes(img.tag.toUpperCase())
+      img?.url && img?.tag && !['MERCH', 'BRANDING', 'COLOR'].includes(img.tag.toUpperCase())
     )
+  const marqueeSpeed = {
+    desktop: homeData.marquee?.desktopSpeed || 30,
+    mobile: homeData.marquee?.mobileSpeed || 20,
+  }
 
   return (
     <>
       {homeData.hero.visible !== false && <Hero data={homeData.hero} />}
-      {homeData.marquee?.visible !== false && <Marquee logos={marqueeLogos} />}
+      {homeData.marquee?.visible !== false && <Marquee logos={marqueeLogos} speed={marqueeSpeed} />}
       {homeData.categories.visible !== false && <Categories data={homeData.categories} />}
       {homeData.howItWorks.visible !== false && <HowItWorks data={homeData.howItWorks} />}
       {homeData.packages.visible !== false && <Packages data={homeData.packages} />}

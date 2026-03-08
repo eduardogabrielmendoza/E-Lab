@@ -10,7 +10,9 @@
     "images": []
   },
   "marquee": {
-    "visible": true
+    "visible": true,
+    "desktopSpeed": 30,
+    "mobileSpeed": 20
   },
   "categories": {
     "visible": true,
