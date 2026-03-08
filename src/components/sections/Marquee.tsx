@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo } from 'react'
+import { useMemo, useId } from 'react'
 import Image from 'next/image'
 
 interface MarqueeLogo {
@@ -25,20 +25,26 @@ function shuffle<T>(arr: T[]): T[] {
 
 export default function Marquee({ logos = [], speed = { desktop: 30, mobile: 20 } }: MarqueeProps) {
   const shuffled = useMemo(() => shuffle(logos), [logos])
+  const uid = useId().replace(/:/g, '')
+
+  const animCSS = `
+    .marquee-${uid} {
+      animation: marquee ${speed.mobile}s linear infinite;
+    }
+    @media (min-width: 640px) {
+      .marquee-${uid} {
+        animation-duration: ${speed.desktop}s;
+      }
+    }
+  `
 
   if (logos.length === 0) {
     const items = ['LOGOS', 'IDENTIDAD VISUAL', 'DISEÑO GRÁFICO', 'TIPOGRAFÍA', 'ILUSTRACIÓN', 'VECTORES']
     const repeated = [...items, ...items]
     return (
       <section className="py-8 bg-white overflow-hidden">
-        <div
-          className="flex whitespace-nowrap"
-          style={{
-            animation: `marquee var(--marquee-speed) linear infinite`,
-            '--marquee-speed': `${speed.mobile}s`,
-          } as React.CSSProperties}
-        >
-          <style>{`@media(min-width:640px){[style*="--marquee-speed"]{--marquee-speed:${speed.desktop}s !important}}`}</style>
+        <style dangerouslySetInnerHTML={{ __html: animCSS }} />
+        <div className={`marquee-${uid} flex whitespace-nowrap`}>
           {repeated.map((item, i) => (
             <span key={i} className="mx-8 text-sm sm:text-base font-black tracking-widest text-brand-black/80">
               {item}
@@ -53,24 +59,18 @@ export default function Marquee({ logos = [], speed = { desktop: 30, mobile: 20 
   const repeated = [...shuffled, ...shuffled]
 
   return (
-    <section className="py-8 sm:py-10 bg-white overflow-hidden">
-      <div
-        className="flex items-center"
-        style={{
-          animation: `marquee var(--marquee-speed) linear infinite`,
-          '--marquee-speed': `${speed.mobile}s`,
-        } as React.CSSProperties}
-      >
-        <style>{`@media(min-width:640px){[style*="--marquee-speed"]{--marquee-speed:${speed.desktop}s !important}}`}</style>
+    <section className="py-6 sm:py-8 bg-white overflow-hidden">
+      <style dangerouslySetInnerHTML={{ __html: animCSS }} />
+      <div className={`marquee-${uid} flex items-center`}>
         {repeated.map((logo, i) => (
-          <div key={i} className="mx-8 sm:mx-14 shrink-0 flex items-center">
-            <div className="relative h-14 sm:h-20 w-36 sm:w-52">
+          <div key={i} className="mx-6 sm:mx-10 shrink-0 flex items-center">
+            <div className="relative h-20 sm:h-28 w-48 sm:w-72">
               <Image
                 src={logo.url}
                 alt={logo.text || `Logo ${logo.tag}`}
                 fill
                 className="object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-500"
-                sizes="(max-width:640px) 144px, 208px"
+                sizes="(max-width:640px) 192px, 288px"
               />
             </div>
           </div>
