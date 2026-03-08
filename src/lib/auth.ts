@@ -2,11 +2,11 @@ import { SignJWT, jwtVerify } from 'jose'
 import { cookies } from 'next/headers'
 import bcrypt from 'bcryptjs'
 
-const SECRET_KEY = process.env.NEXTAUTH_SECRET
-if (!SECRET_KEY) {
-  throw new Error('NEXTAUTH_SECRET environment variable is required')
+function getSecret() {
+  const key = process.env.NEXTAUTH_SECRET
+  if (!key) throw new Error('NEXTAUTH_SECRET environment variable is required')
+  return new TextEncoder().encode(key)
 }
-const SECRET = new TextEncoder().encode(SECRET_KEY)
 
 // Pre-hashed passwords. To add/change users, generate hash with:
 //   node -e "require('bcryptjs').hash('yourpassword',12).then(h=>console.log(h))"
@@ -45,12 +45,12 @@ export async function createToken(email: string) {
     .setProtectedHeader({ alg: 'HS256' })
     .setExpirationTime('4h')
     .setIssuedAt()
-    .sign(SECRET)
+    .sign(getSecret())
 }
 
 export async function verifyToken(token: string) {
   try {
-    const { payload } = await jwtVerify(token, SECRET)
+    const { payload } = await jwtVerify(token, getSecret())
     return payload as { email: string }
   } catch {
     return null
