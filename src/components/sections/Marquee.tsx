@@ -23,13 +23,26 @@ function shuffle<T>(arr: T[]): T[] {
   return a
 }
 
+function dedupe(logos: MarqueeLogo[]): MarqueeLogo[] {
+  const seen = new Set<string>()
+  return logos.filter((l) => {
+    if (seen.has(l.url)) return false
+    seen.add(l.url)
+    return true
+  })
+}
+
 export default function Marquee({ logos = [], speed = { desktop: 30, mobile: 20 } }: MarqueeProps) {
-  const shuffled = useMemo(() => shuffle(logos), [logos])
+  const unique = useMemo(() => shuffle(dedupe(logos)), [logos])
   const uid = useId().replace(/:/g, '')
 
   const animCSS = `
+    @keyframes marquee-slide {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
     .marquee-${uid} {
-      animation: marquee ${speed.mobile}s linear infinite;
+      animation: marquee-slide ${speed.mobile}s linear infinite;
     }
     @media (min-width: 640px) {
       .marquee-${uid} {
@@ -38,7 +51,7 @@ export default function Marquee({ logos = [], speed = { desktop: 30, mobile: 20 
     }
   `
 
-  if (logos.length === 0) {
+  if (unique.length === 0) {
     const items = ['LOGOS', 'IDENTIDAD VISUAL', 'DISEÑO GRÁFICO', 'TIPOGRAFÍA', 'ILUSTRACIÓN', 'VECTORES']
     const repeated = [...items, ...items]
     return (
@@ -56,21 +69,22 @@ export default function Marquee({ logos = [], speed = { desktop: 30, mobile: 20 
     )
   }
 
-  const repeated = [...shuffled, ...shuffled]
+  // Duplicate the set once for seamless loop (translateX -50%)
+  const track = [...unique, ...unique]
 
   return (
-    <section className="py-6 sm:py-8 bg-white overflow-hidden">
+    <section className="py-8 sm:py-12 bg-white overflow-hidden">
       <style dangerouslySetInnerHTML={{ __html: animCSS }} />
       <div className={`marquee-${uid} flex items-center`}>
-        {repeated.map((logo, i) => (
-          <div key={i} className="mx-6 sm:mx-10 shrink-0 flex items-center">
-            <div className="relative h-20 sm:h-28 w-48 sm:w-72">
+        {track.map((logo, i) => (
+          <div key={i} className="mx-8 sm:mx-14 shrink-0 flex items-center">
+            <div className="relative h-28 sm:h-40 w-56 sm:w-80">
               <Image
                 src={logo.url}
                 alt={logo.text || `Logo ${logo.tag}`}
                 fill
                 className="object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-500"
-                sizes="(max-width:640px) 192px, 288px"
+                sizes="(max-width:640px) 224px, 320px"
               />
             </div>
           </div>
