@@ -1,0 +1,59 @@
+{
+  "announcement": {
+    "text": "ACEPTANDO NUEVOS PROYECTOS PARA MARZO 2026",
+    "link": "#paquetes",
+    "visible": true
+  },
+  "nav": {
+    "logo": {
+      "text": "E-LAB",
+      "image": ""
+    },
+    "links": [
+      { "label": "EXPLORAR", "href": "/#explorar" },
+      { "label": "PORTAFOLIO", "href": "/portafolio" },
+      { "label": "PRECIOS", "href": "/#paquetes" },
+      { "label": "BLOG", "href": "/blog" },
+      { "label": "CONTACTO", "href": "/contacto" }
+    ],
+    "cta": {
+      "label": "CONTACTO",
+      "href": "/contacto"
+    }
+  },
+  "footer": {
+    "logo": {
+      "text": "E-LAB",
+      "image": ""
+    },
+    "description": "Diseñamos logotipos y piezas de diseño gráfico profesionales para cualquier industria. Obtén el tuyo hoy.",
+    "categories": {
+      "title": "DISEÑO GRÁFICO",
+      "links": [
+        { "label": "LOGOS CORPORATIVOS", "href": "/logos-corporativos" },
+        { "label": "LOGOS DE BANDAS", "href": "/logos-de-bandas" },
+        { "label": "LOGOS MINIMALISTAS", "href": "/logos-minimalistas" },
+        { "label": "IDENTIDAD VISUAL", "href": "/identidad-visual" },
+        { "label": "DISEÑO DE MERCH", "href": "/diseno-merch" },
+        { "label": "BRANDING COMPLETO", "href": "/branding" }
+      ]
+    },
+    "menu": {
+      "title": "MENÚ",
+      "links": [
+        { "label": "POLÍTICA DE PRIVACIDAD", "href": "/privacidad" },
+        { "label": "TÉRMINOS Y CONDICIONES", "href": "/terminos" }
+      ]
+    },
+    "contact": {
+      "title": "CONTACTO",
+      "location": "Operando con ❤️ desde Venezuela.",
+      "email": "eduardogabrielm3ndoza@gmail.com",
+      "socials": [
+        { "platform": "Instagram", "url": "#", "icon": "instagram" },
+        { "platform": "Behance", "url": "#", "icon": "behance" }
+      ]
+    },
+    "copyright": "E-LAB © 2026 TODOS LOS DERECHOS RESERVADOS."
+  }
+}

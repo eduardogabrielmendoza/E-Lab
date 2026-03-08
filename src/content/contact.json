@@ -1,0 +1,28 @@
+{
+  "hero": {
+    "title": "CONTACTO",
+    "subtitle": "DISEÑEMOS ALGO INCREÍBLE"
+  },
+  "form": {
+    "title": "¿QUIERES HABLAR SOBRE TU PROYECTO?",
+    "description": "Completa el formulario con detalles para que podamos tener una mejor idea de lo que buscas. Te responderemos en menos de 24 horas.",
+    "note": "NO OLVIDES REVISAR TU CARPETA DE SPAM PARA NUESTRA RESPUESTA",
+    "fields": {
+      "name": "Tu Nombre *",
+      "email": "Tu Email *",
+      "company": "Empresa / Banda",
+      "country": "País",
+      "howFound": "¿Cómo nos encontraste?",
+      "genre": "Industria / Género",
+      "budget": "Presupuesto en $USD",
+      "message": "Mensaje *",
+      "upload": "Sube tus referencias"
+    },
+    "submitLabel": "ENVIAR"
+  },
+  "cta": {
+    "title": "¿QUÉ ESTÁS ESPERANDO?",
+    "description": "Ordena y obtén tu nuevo logotipo diseñado por profesionales.",
+    "button": { "label": "VER PRECIOS", "href": "/#paquetes" }
+  }
+}

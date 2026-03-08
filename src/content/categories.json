@@ -1,0 +1,113 @@
+{
+  "pages": {
+    "logos-corporativos": {
+      "title": "LOGOS CORPORATIVOS",
+      "subtitle": "Obtén logotipos corporativos diseñados por diseñadores de clase mundial que entienden el poder de la representación visual de una marca en el mundo empresarial.",
+      "heroImages": [],
+      "overview": "Nuestros logotipos corporativos son diseñados para transmitir profesionalismo, confianza y la esencia de tu empresa. Cada diseño es único y creado desde cero.",
+      "whatYouGet": [
+        "Logotipos PNG transparentes en alta resolución con diseño en blanco y negro",
+        "Wallpapers cuadrados con elementos texturizados",
+        "Fotos para redes sociales con diseños texturizados",
+        "Diseño de logo a color opcional",
+        "Archivos fuente en formatos .svg, .ai o .psd",
+        "Mockup de camiseta en formato 3D",
+        "Licencia comercial con derechos ilimitados",
+        "Hasta 7 revisiones",
+        "Tiempo estimado de entrega: 3-7 días"
+      ],
+      "gallery": [],
+      "relatedCategories": ["logos-minimalistas", "identidad-visual", "branding"]
+    },
+    "logos-de-bandas": {
+      "title": "LOGOS DE BANDAS",
+      "subtitle": "Logotipos únicos para bandas y músicos que buscan una identidad visual poderosa y memorable.",
+      "heroImages": [],
+      "overview": "Especializados en crear logotipos que capturan la esencia sonora de tu banda. Desde rock hasta metal, cada diseño refleja tu género y personalidad musical.",
+      "whatYouGet": [
+        "Logotipos PNG transparentes en alta resolución",
+        "Diseño blanco y negro adaptable a cualquier fondo",
+        "Wallpapers para redes sociales",
+        "Archivos fuente editables (.svg, .ai, .psd)",
+        "Mockup de camiseta 3D",
+        "Licencia comercial ilimitada",
+        "Hasta 5 revisiones",
+        "Entrega en 3-7 días"
+      ],
+      "gallery": [],
+      "relatedCategories": ["diseno-merch", "branding"]
+    },
+    "logos-minimalistas": {
+      "title": "LOGOS MINIMALISTAS",
+      "subtitle": "Diseños limpios, modernos y con impacto visual máximo. Menos es más.",
+      "heroImages": [],
+      "overview": "El minimalismo en el diseño de logos transmite elegancia y sofisticación. Creamos logotipos que comunican la esencia de tu marca con la menor cantidad de elementos posible.",
+      "whatYouGet": [
+        "Logotipos PNG transparentes en alta resolución",
+        "Variaciones horizontales y verticales",
+        "Favicon y versiones reducidas",
+        "Archivos fuente editables",
+        "Paleta de colores sugerida",
+        "Hasta 5 revisiones",
+        "Entrega en 3-5 días"
+      ],
+      "gallery": [],
+      "relatedCategories": ["logos-corporativos", "identidad-visual"]
+    },
+    "identidad-visual": {
+      "title": "IDENTIDAD VISUAL",
+      "subtitle": "Sistemas completos de identidad de marca que hacen que tu negocio se destaque.",
+      "heroImages": [],
+      "overview": "Más allá de un logo: creamos sistemas visuales completos que incluyen tipografía, paleta de colores, patrones y elementos gráficos que unifican toda tu comunicación visual.",
+      "whatYouGet": [
+        "Logotipo principal + variaciones",
+        "Paleta de colores completa",
+        "Tipografía primaria y secundaria",
+        "Elementos gráficos complementarios",
+        "Patrones de marca",
+        "Manual de identidad básico",
+        "Archivos en todos los formatos",
+        "Revisiones ilimitadas",
+        "Entrega en 7-14 días"
+      ],
+      "gallery": [],
+      "relatedCategories": ["logos-corporativos", "branding"]
+    },
+    "diseno-merch": {
+      "title": "DISEÑO DE MERCH",
+      "subtitle": "Diseños impactantes para camisetas, hoodies, posters y todo tipo de merchandise.",
+      "heroImages": [],
+      "overview": "Creamos diseños que tus fans querrán llevar puestos. Desde arte para camisetas hasta empaques de productos, cada pieza está diseñada para impactar.",
+      "whatYouGet": [
+        "Diseño de arte para camiseta/hoodie",
+        "Archivos listos para impresión (300dpi+)",
+        "Mockups de producto",
+        "Variaciones de color",
+        "Archivos fuente editables",
+        "Hasta 5 revisiones",
+        "Entrega en 5-7 días"
+      ],
+      "gallery": [],
+      "relatedCategories": ["logos-de-bandas", "branding"]
+    },
+    "branding": {
+      "title": "BRANDING COMPLETO",
+      "subtitle": "Paquetes completos de branding que transforman tu idea en una marca profesional.",
+      "heroImages": [],
+      "overview": "Desde el concepto hasta la ejecución, diseñamos tu marca de principio a fin. Logo, identidad visual, papelería, redes sociales y todo lo que necesitas para lanzar tu marca al mundo.",
+      "whatYouGet": [
+        "Logotipo principal + variaciones",
+        "Identidad visual completa",
+        "Papelería corporativa (tarjeta, hoja membretada)",
+        "Kit de redes sociales",
+        "Manual de marca completo",
+        "Diseño de packaging (si aplica)",
+        "Todos los archivos editables",
+        "Revisiones ilimitadas",
+        "Entrega en 10-21 días"
+      ],
+      "gallery": [],
+      "relatedCategories": ["identidad-visual", "logos-corporativos", "diseno-merch"]
+    }
+  }
+}

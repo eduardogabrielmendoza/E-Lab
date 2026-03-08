@@ -1,0 +1,178 @@
+{
+  "hero": {
+    "title": "LOGOTIPOS Y DISEÑO GRÁFICO 100% ORIGINALES.",
+    "subtitle": "Sin plantillas. Sin IA. Diseño hecho a mano por profesionales que entienden tu visión.",
+    "cta1": { "label": "VER PRECIOS", "href": "#paquetes" },
+    "cta2": { "label": "ORDENAR AHORA", "href": "/ordenar" },
+    "badge": "Diseño profesional a tu alcance",
+    "images": []
+  },
+  "categories": {
+    "title": "EXPLORA NUESTROS SERVICIOS",
+    "items": [
+      {
+        "title": "LOGOS CORPORATIVOS",
+        "slug": "logos-corporativos",
+        "image": "",
+        "description": "Logotipos profesionales para empresas y marcas."
+      },
+      {
+        "title": "LOGOS DE BANDAS",
+        "slug": "logos-de-bandas",
+        "image": "",
+        "description": "Logotipos únicos para bandas y músicos."
+      },
+      {
+        "title": "LOGOS MINIMALISTAS",
+        "slug": "logos-minimalistas",
+        "image": "",
+        "description": "Diseños limpios y modernos con impacto visual."
+      },
+      {
+        "title": "IDENTIDAD VISUAL",
+        "slug": "identidad-visual",
+        "image": "",
+        "description": "Sistemas completos de identidad de marca."
+      },
+      {
+        "title": "DISEÑO DE MERCH",
+        "slug": "diseno-merch",
+        "image": "",
+        "description": "Diseños para camisetas, hoodies y merchandise."
+      },
+      {
+        "title": "BRANDING COMPLETO",
+        "slug": "branding",
+        "image": "",
+        "description": "Paquetes completos de branding para tu negocio."
+      }
+    ]
+  },
+  "howItWorks": {
+    "title": "¿CÓMO FUNCIONA?",
+    "steps": [
+      {
+        "number": "01",
+        "title": "CUÉNTANOS TU VISIÓN",
+        "description": "Completa el formulario con los detalles de tu proyecto. Cuéntanos sobre tu marca, estilo y preferencias."
+      },
+      {
+        "number": "02",
+        "title": "DISEÑAMOS PROPUESTAS",
+        "description": "Nuestro equipo crea conceptos iniciales basados en tu brief. Recibirás múltiples opciones para elegir."
+      },
+      {
+        "number": "03",
+        "title": "REVISIONES",
+        "description": "Trabajamos contigo para refinar el diseño hasta que estés completamente satisfecho con el resultado."
+      },
+      {
+        "number": "04",
+        "title": "ENTREGA FINAL",
+        "description": "Recibes todos los archivos en múltiples formatos listos para usar en cualquier plataforma."
+      }
+    ]
+  },
+  "packages": {
+    "title": "ELIGE TU PAQUETE",
+    "items": [
+      {
+        "name": "BÁSICO",
+        "price": "$99",
+        "description": "Perfecto para comenzar",
+        "features": [
+          "1 concepto de logo",
+          "2 revisiones",
+          "Archivos PNG y JPG",
+          "Entrega en 5 días",
+          "Fondo transparente"
+        ],
+        "cta": { "label": "ORDENAR", "href": "/ordenar" },
+        "popular": false
+      },
+      {
+        "name": "PROFESIONAL",
+        "price": "$199",
+        "description": "El más popular",
+        "features": [
+          "3 conceptos de logo",
+          "5 revisiones",
+          "Archivos PNG, JPG, SVG",
+          "Archivos fuente (AI/PSD)",
+          "Entrega en 3-5 días",
+          "Mockup de camiseta",
+          "Wallpapers para redes"
+        ],
+        "cta": { "label": "ORDENAR", "href": "/ordenar" },
+        "popular": true
+      },
+      {
+        "name": "PREMIUM",
+        "price": "$349",
+        "description": "La experiencia completa",
+        "features": [
+          "5 conceptos de logo",
+          "Revisiones ilimitadas",
+          "Todos los formatos",
+          "Archivos fuente editables",
+          "Entrega en 3-7 días",
+          "Kit de redes sociales",
+          "Mockups 3D",
+          "Licencia comercial",
+          "Guía de marca básica"
+        ],
+        "cta": { "label": "ORDENAR", "href": "/ordenar" },
+        "popular": false
+      }
+    ]
+  },
+  "gallery": {
+    "title": "TRABAJOS RECIENTES",
+    "images": []
+  },
+  "cta": {
+    "title": "SIN CLIPART. SIN PLANTILLAS. DISEÑO GRÁFICO REAL.",
+    "description": "Servicios de diseño de logotipos profesionales. Ordena y obtén tu nuevo logotipo diseñado por profesionales.",
+    "button": { "label": "ORDENA TU LOGOTIPO", "href": "/ordenar" }
+  },
+  "demoForm": {
+    "title": "¿QUIERES VER UN DEMO?",
+    "subtitle": "Envíanos el nombre de tu proyecto y te mostraremos lo que podemos hacer.",
+    "tabs": ["LOGO CORPORATIVO", "LOGO DE BANDA", "IDENTIDAD VISUAL", "BRANDING"],
+    "fields": {
+      "name": "Nombre / Empresa *",
+      "email": "Tu Email *"
+    },
+    "submitLabel": "ENVIAR"
+  },
+  "faq": {
+    "title": "PREGUNTAS FRECUENTES",
+    "items": [
+      {
+        "question": "¿Cuánto tiempo toma el proceso de diseño?",
+        "answer": "El tiempo varía según la complejidad de tu proyecto y el número de revisiones requeridas. Buscamos entregar logotipos de alta calidad en un plazo razonable, y nuestro equipo te proporcionará un cronograma estimado durante las discusiones iniciales."
+      },
+      {
+        "question": "¿Cómo solicito revisiones a los diseños iniciales?",
+        "answer": "Una vez que recibas los conceptos iniciales, puedes enviar tus comentarios detallados por email o mediante nuestro formulario de contacto. Trabajaremos en las revisiones según tus indicaciones hasta que estés satisfecho."
+      },
+      {
+        "question": "¿Qué pasa si tengo ideas o conceptos específicos para mi logotipo?",
+        "answer": "¡Nos encanta cuando los clientes traen ideas! Cuéntanos todo sobre tu visión en el formulario de orden. Referencias visuales, colores preferidos, estilos que te gustan - todo eso nos ayuda a crear algo perfecto para ti."
+      },
+      {
+        "question": "¿Qué pasa si necesito servicios de diseño adicionales más allá del logotipo?",
+        "answer": "Ofrecemos una gama completa de servicios de diseño gráfico, incluyendo identidad visual, diseño de merch, branding completo y más. Contáctanos para discutir tus necesidades adicionales."
+      },
+      {
+        "question": "¿Qué diferencia a su servicio de diseño de los demás?",
+        "answer": "Cada logotipo es diseñado 100% a mano, sin plantillas ni inteligencia artificial. Nos especializamos en entender la esencia de cada proyecto y traducirla en un diseño visual único e impactante."
+      }
+    ]
+  },
+  "blog": {
+    "title": "BLOG",
+    "subtitle": "LEE NUESTROS ARTÍCULOS Y ENCUENTRA RECURSOS",
+    "posts": []
+  }
+}

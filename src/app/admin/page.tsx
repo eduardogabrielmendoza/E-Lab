@@ -1,0 +1,624 @@
+'use client'
+
+import { useState, useEffect, useCallback } from 'react'
+import { useRouter } from 'next/navigation'
+
+type ViewMode = 'desktop' | 'mobile'
+type ActiveSection = 'dashboard' | 'header' | 'footer' | 'home' | 'categories' | 'contact' | 'order' | 'portfolio'
+
+export default function AdminPage() {
+  const router = useRouter()
+  const [authenticated, setAuthenticated] = useState(false)
+  const [checking, setChecking] = useState(true)
+  const [activeSection, setActiveSection] = useState<ActiveSection>('dashboard')
+  const [viewMode, setViewMode] = useState<ViewMode>('desktop')
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  // Content states
+  const [layoutData, setLayoutData] = useState<Record<string, unknown> | null>(null)
+  const [homeData, setHomeData] = useState<Record<string, unknown> | null>(null)
+  const [categoriesData, setCategoriesData] = useState<Record<string, unknown> | null>(null)
+  const [contactData, setContactData] = useState<Record<string, unknown> | null>(null)
+  const [orderData, setOrderData] = useState<Record<string, unknown> | null>(null)
+  const [portfolioData, setPortfolioData] = useState<Record<string, unknown> | null>(null)
+
+  const [saving, setSaving] = useState(false)
+  const [saveMessage, setSaveMessage] = useState('')
+
+  useEffect(() => {
+    fetch('/api/auth/session')
+      .then((r) => {
+        if (!r.ok) throw new Error()
+        return r.json()
+      })
+      .then(() => setAuthenticated(true))
+      .catch(() => router.push('/admin/login'))
+      .finally(() => setChecking(false))
+  }, [router])
+
+  const loadContent = useCallback(async () => {
+    const files = ['layout', 'home', 'categories', 'contact', 'order', 'portfolio']
+    const setters = [setLayoutData, setHomeData, setCategoriesData, setContactData, setOrderData, setPortfolioData]
+    
+    await Promise.all(
+      files.map(async (file, i) => {
+        const res = await fetch(`/api/content?file=${file}.json`)
+        if (res.ok) {
+          const data = await res.json()
+          setters[i](data)
+        }
+      })
+    )
+  }, [])
+
+  useEffect(() => {
+    if (authenticated) loadContent()
+  }, [authenticated, loadContent])
+
+  async function saveFile(file: string, data: unknown) {
+    setSaving(true)
+    setSaveMessage('')
+    try {
+      const res = await fetch(`/api/content?file=${file}.json`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+      if (res.ok) {
+        setSaveMessage('Guardado exitosamente')
+        setTimeout(() => setSaveMessage(''), 3000)
+      } else {
+        setSaveMessage('Error al guardar')
+      }
+    } catch {
+      setSaveMessage('Error de conexión')
+    }
+    setSaving(false)
+  }
+
+  async function handleLogout() {
+    await fetch('/api/auth/logout', { method: 'POST' })
+    router.push('/admin/login')
+  }
+
+  async function handleImageUpload(onUrl: (url: string) => void) {
+    const input = document.createElement('input')
+    input.type = 'file'
+    input.accept = 'image/*'
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0]
+      if (!file) return
+      const formData = new FormData()
+      formData.append('file', file)
+      try {
+        const res = await fetch('/api/upload', { method: 'POST', body: formData })
+        if (res.ok) {
+          const data = await res.json()
+          onUrl(data.url)
+        }
+      } catch {
+        alert('Error al subir imagen')
+      }
+    }
+    input.click()
+  }
+
+  if (checking) {
+    return (
+      <div className="min-h-screen bg-brand-black flex items-center justify-center">
+        <div className="text-brand-400 text-sm">Verificando sesión...</div>
+      </div>
+    )
+  }
+
+  if (!authenticated) return null
+
+  const sections: { key: ActiveSection; label: string }[] = [
+    { key: 'dashboard', label: 'Dashboard' },
+    { key: 'header', label: 'Header' },
+    { key: 'footer', label: 'Footer' },
+    { key: 'home', label: 'Home' },
+    { key: 'categories', label: 'Categorías' },
+    { key: 'contact', label: 'Contacto' },
+    { key: 'order', label: 'Ordenar' },
+    { key: 'portfolio', label: 'Portafolio' },
+  ]
+
+  return (
+    <div className="min-h-screen bg-brand-900 flex">
+      {/* Sidebar */}
+      <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-brand-black border-r border-brand-700 transform transition-transform lg:translate-x-0 lg:static ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className="p-6 border-b border-brand-700">
+          <h1 className="text-xl font-black text-white tracking-tighter">E-LAB CMS</h1>
+        </div>
+        <nav className="p-4 space-y-1">
+          {sections.map((s) => (
+            <button
+              key={s.key}
+              onClick={() => { setActiveSection(s.key); setSidebarOpen(false) }}
+              className={`w-full text-left px-4 py-2.5 text-sm rounded transition-colors ${
+                activeSection === s.key
+                  ? 'bg-brand-800 text-white font-medium'
+                  : 'text-brand-400 hover:text-white hover:bg-brand-800/50'
+              }`}
+            >
+              {s.label}
+            </button>
+          ))}
+        </nav>
+        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-brand-700">
+          <button onClick={handleLogout} className="w-full text-left px-4 py-2 text-sm text-red-400 hover:text-red-300 transition-colors">
+            Cerrar sesión
+          </button>
+        </div>
+      </aside>
+
+      {/* Overlay */}
+      {sidebarOpen && (
+        <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />
+      )}
+
+      {/* Main */}
+      <div className="flex-1 flex flex-col min-h-screen">
+        {/* Top bar */}
+        <header className="bg-brand-black border-b border-brand-700 px-4 sm:px-6 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-white">
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+            <span className="text-white font-medium text-sm capitalize">{activeSection}</span>
+          </div>
+
+          <div className="flex items-center gap-3">
+            {saveMessage && (
+              <span className={`text-xs ${saveMessage.includes('Error') ? 'text-red-400' : 'text-green-400'}`}>
+                {saveMessage}
+              </span>
+            )}
+            {/* View toggle */}
+            <div className="flex border border-brand-700 rounded overflow-hidden">
+              <button
+                onClick={() => setViewMode('desktop')}
+                className={`px-3 py-1.5 text-xs ${viewMode === 'desktop' ? 'bg-brand-700 text-white' : 'text-brand-400'}`}
+              >
+                Desktop
+              </button>
+              <button
+                onClick={() => setViewMode('mobile')}
+                className={`px-3 py-1.5 text-xs ${viewMode === 'mobile' ? 'bg-brand-700 text-white' : 'text-brand-400'}`}
+              >
+                Mobile
+              </button>
+            </div>
+            <a href="/" target="_blank" className="text-xs text-brand-400 hover:text-white border border-brand-700 px-3 py-1.5 rounded">
+              Ver sitio
+            </a>
+          </div>
+        </header>
+
+        {/* Content area with preview */}
+        <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
+          {/* Editor */}
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:max-w-2xl">
+            {activeSection === 'dashboard' && <DashboardView />}
+            {activeSection === 'header' && layoutData && (
+              <HeaderEditor data={layoutData} onSave={(d) => { setLayoutData(d); saveFile('layout', d) }} onUpload={handleImageUpload} saving={saving} />
+            )}
+            {activeSection === 'footer' && layoutData && (
+              <FooterEditor data={layoutData} onSave={(d) => { setLayoutData(d); saveFile('layout', d) }} saving={saving} />
+            )}
+            {activeSection === 'home' && homeData && (
+              <HomeEditor data={homeData} onSave={(d) => { setHomeData(d); saveFile('home', d) }} onUpload={handleImageUpload} saving={saving} />
+            )}
+            {activeSection === 'categories' && categoriesData && (
+              <CategoriesEditor data={categoriesData} onSave={(d) => { setCategoriesData(d); saveFile('categories', d) }} saving={saving} />
+            )}
+            {activeSection === 'contact' && contactData && (
+              <ContactEditor data={contactData} onSave={(d) => { setContactData(d); saveFile('contact', d) }} saving={saving} />
+            )}
+            {activeSection === 'order' && orderData && (
+              <OrderEditor data={orderData} onSave={(d) => { setOrderData(d); saveFile('order', d) }} saving={saving} />
+            )}
+            {activeSection === 'portfolio' && portfolioData && (
+              <PortfolioEditor data={portfolioData} onSave={(d) => { setPortfolioData(d); saveFile('portfolio', d) }} saving={saving} />
+            )}
+          </div>
+
+          {/* Live Preview */}
+          <div className="hidden lg:block flex-1 border-l border-brand-700 bg-brand-800 p-4 overflow-hidden">
+            <div className="h-full flex items-start justify-center">
+              <div
+                className={`bg-white rounded-lg overflow-hidden shadow-2xl transition-all duration-300 h-full ${
+                  viewMode === 'mobile' ? 'w-[375px]' : 'w-full'
+                }`}
+                style={viewMode === 'mobile' ? { border: '8px solid #262626', borderRadius: '24px' } : {}}
+              >
+                <iframe
+                  src="/"
+                  className="w-full h-full border-0"
+                  key={`${viewMode}-${Date.now()}`}
+                  title="Vista previa"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/* ====================== EDITOR COMPONENTS ====================== */
+
+function DashboardView() {
+  return (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold text-white">Bienvenido al Panel CMS</h2>
+      <p className="text-brand-400 text-sm">Selecciona una sección del menú lateral para editar el contenido de tu sitio web.</p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {[
+          { label: 'Header', desc: 'Logo, navegación y barra de anuncio' },
+          { label: 'Footer', desc: 'Links, contacto y redes sociales' },
+          { label: 'Home', desc: 'Hero, categorías, paquetes, FAQ' },
+          { label: 'Categorías', desc: 'Páginas de servicios' },
+          { label: 'Contacto', desc: 'Formulario y textos de contacto' },
+          { label: 'Ordenar', desc: 'Página de orden' },
+          { label: 'Portafolio', desc: 'Galería y showcase' },
+        ].map((item) => (
+          <div key={item.label} className="bg-brand-800 border border-brand-700 p-4">
+            <h3 className="text-sm font-bold text-white">{item.label}</h3>
+            <p className="text-xs text-brand-400 mt-1">{item.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+interface EditorProps {
+  data: Record<string, unknown>
+  onSave: (data: Record<string, unknown>) => void
+  saving: boolean
+  onUpload?: (cb: (url: string) => void) => void
+}
+
+function SaveButton({ onClick, saving }: { onClick: () => void; saving: boolean }) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={saving}
+      className="bg-white text-brand-black px-6 py-2 text-sm font-bold tracking-wider hover:bg-brand-100 transition-colors disabled:opacity-50"
+    >
+      {saving ? 'GUARDANDO...' : 'GUARDAR CAMBIOS'}
+    </button>
+  )
+}
+
+function FieldInput({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
+  return (
+    <div>
+      <label className="block text-xs font-medium text-brand-400 mb-1.5">{label}</label>
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full bg-brand-800 border border-brand-700 text-white px-3 py-2 text-sm focus:outline-none focus:border-brand-400 transition-colors"
+      />
+    </div>
+  )
+}
+
+function FieldTextarea({ label, value, onChange, rows = 3 }: { label: string; value: string; onChange: (v: string) => void; rows?: number }) {
+  return (
+    <div>
+      <label className="block text-xs font-medium text-brand-400 mb-1.5">{label}</label>
+      <textarea
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        rows={rows}
+        className="w-full bg-brand-800 border border-brand-700 text-white px-3 py-2 text-sm focus:outline-none focus:border-brand-400 transition-colors resize-none"
+      />
+    </div>
+  )
+}
+
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return <h3 className="text-lg font-bold text-white border-b border-brand-700 pb-2 mb-4">{children}</h3>
+}
+
+/* ---- Header Editor ---- */
+function HeaderEditor({ data, onSave, saving }: EditorProps) {
+  const [local, setLocal] = useState(JSON.parse(JSON.stringify(data)))
+  const ann = local.announcement as Record<string, unknown>
+  const nav = local.nav as Record<string, unknown>
+  const logo = nav.logo as Record<string, unknown>
+  const links = nav.links as Array<Record<string, string>>
+  const cta = nav.cta as Record<string, string>
+
+  function update() { setLocal({ ...local }) }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-bold text-white">Editar Header</h2>
+        <SaveButton onClick={() => onSave(local)} saving={saving} />
+      </div>
+
+      <SectionTitle>Barra de Anuncio</SectionTitle>
+      <FieldInput label="Texto" value={ann.text as string} onChange={(v) => { ann.text = v; update() }} />
+      <FieldInput label="Link" value={ann.link as string} onChange={(v) => { ann.link = v; update() }} />
+      <label className="flex items-center gap-2 text-sm text-brand-300">
+        <input type="checkbox" checked={ann.visible as boolean} onChange={(e) => { ann.visible = e.target.checked; update() }} className="accent-white" />
+        Visible
+      </label>
+
+      <SectionTitle>Logo</SectionTitle>
+      <FieldInput label="Texto del Logo" value={logo.text as string} onChange={(v) => { logo.text = v; update() }} />
+
+      <SectionTitle>Links de Navegación</SectionTitle>
+      {links.map((link, i) => (
+        <div key={i} className="flex gap-2">
+          <FieldInput label="Label" value={link.label} onChange={(v) => { link.label = v; update() }} />
+          <FieldInput label="Href" value={link.href} onChange={(v) => { link.href = v; update() }} />
+        </div>
+      ))}
+
+      <SectionTitle>Botón CTA</SectionTitle>
+      <FieldInput label="Label" value={cta.label} onChange={(v) => { cta.label = v; update() }} />
+      <FieldInput label="Href" value={cta.href} onChange={(v) => { cta.href = v; update() }} />
+
+      <SaveButton onClick={() => onSave(local)} saving={saving} />
+    </div>
+  )
+}
+
+/* ---- Footer Editor ---- */
+function FooterEditor({ data, onSave, saving }: EditorProps) {
+  const [local, setLocal] = useState(JSON.parse(JSON.stringify(data)))
+  const footer = local.footer as Record<string, unknown>
+  const fLogo = footer.logo as Record<string, string>
+  const categories = footer.categories as { title: string; links: Array<Record<string, string>> }
+  const menu = footer.menu as { title: string; links: Array<Record<string, string>> }
+  const contact = footer.contact as Record<string, unknown>
+
+  function update() { setLocal({ ...local }) }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-bold text-white">Editar Footer</h2>
+        <SaveButton onClick={() => onSave(local)} saving={saving} />
+      </div>
+
+      <SectionTitle>Logo y Descripción</SectionTitle>
+      <FieldInput label="Texto del Logo" value={fLogo.text} onChange={(v) => { fLogo.text = v; update() }} />
+      <FieldTextarea label="Descripción" value={footer.description as string} onChange={(v) => { footer.description = v; update() }} />
+
+      <SectionTitle>Categorías</SectionTitle>
+      <FieldInput label="Título de sección" value={categories.title} onChange={(v) => { categories.title = v; update() }} />
+      {categories.links.map((link, i) => (
+        <div key={i} className="flex gap-2">
+          <FieldInput label="Label" value={link.label} onChange={(v) => { link.label = v; update() }} />
+          <FieldInput label="Href" value={link.href} onChange={(v) => { link.href = v; update() }} />
+        </div>
+      ))}
+
+      <SectionTitle>Menú</SectionTitle>
+      {menu.links.map((link, i) => (
+        <div key={i} className="flex gap-2">
+          <FieldInput label="Label" value={link.label} onChange={(v) => { link.label = v; update() }} />
+          <FieldInput label="Href" value={link.href} onChange={(v) => { link.href = v; update() }} />
+        </div>
+      ))}
+
+      <SectionTitle>Contacto</SectionTitle>
+      <FieldInput label="Ubicación" value={contact.location as string} onChange={(v) => { contact.location = v; update() }} />
+      <FieldInput label="Email" value={contact.email as string} onChange={(v) => { contact.email = v; update() }} />
+      <FieldInput label="Copyright" value={footer.copyright as string} onChange={(v) => { footer.copyright = v; update() }} />
+
+      <SaveButton onClick={() => onSave(local)} saving={saving} />
+    </div>
+  )
+}
+
+/* ---- Home Editor ---- */
+function HomeEditor({ data, onSave, onUpload, saving }: EditorProps) {
+  const [local, setLocal] = useState(JSON.parse(JSON.stringify(data)))
+  const hero = local.hero as Record<string, unknown>
+  const howItWorks = local.howItWorks as { title: string; steps: Array<Record<string, string>> }
+  const packages = local.packages as { title: string; items: Array<Record<string, unknown>> }
+  const cta = local.cta as Record<string, unknown>
+  const demoForm = local.demoForm as Record<string, unknown>
+  const faq = local.faq as { title: string; items: Array<Record<string, string>> }
+
+  function update() { setLocal({ ...local }) }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-bold text-white">Editar Home</h2>
+        <SaveButton onClick={() => onSave(local)} saving={saving} />
+      </div>
+
+      <SectionTitle>Hero</SectionTitle>
+      <FieldInput label="Título" value={hero.title as string} onChange={(v) => { hero.title = v; update() }} />
+      <FieldTextarea label="Subtítulo" value={hero.subtitle as string} onChange={(v) => { hero.subtitle = v; update() }} />
+      <FieldInput label="Badge" value={hero.badge as string} onChange={(v) => { hero.badge = v; update() }} />
+      <FieldInput label="CTA 1 Label" value={(hero.cta1 as Record<string, string>).label} onChange={(v) => { (hero.cta1 as Record<string, string>).label = v; update() }} />
+      <FieldInput label="CTA 2 Label" value={(hero.cta2 as Record<string, string>).label} onChange={(v) => { (hero.cta2 as Record<string, string>).label = v; update() }} />
+
+      <SectionTitle>Cómo Funciona</SectionTitle>
+      <FieldInput label="Título de sección" value={howItWorks.title} onChange={(v) => { howItWorks.title = v; update() }} />
+      {howItWorks.steps.map((step, i) => (
+        <div key={i} className="bg-brand-800/50 p-3 space-y-2 border border-brand-700">
+          <FieldInput label={`Paso ${step.number} - Título`} value={step.title} onChange={(v) => { step.title = v; update() }} />
+          <FieldTextarea label="Descripción" value={step.description} onChange={(v) => { step.description = v; update() }} rows={2} />
+        </div>
+      ))}
+
+      <SectionTitle>Paquetes</SectionTitle>
+      <FieldInput label="Título de sección" value={packages.title} onChange={(v) => { packages.title = v; update() }} />
+      {packages.items.map((pkg, i) => (
+        <div key={i} className="bg-brand-800/50 p-3 space-y-2 border border-brand-700">
+          <FieldInput label="Nombre" value={pkg.name as string} onChange={(v) => { pkg.name = v; update() }} />
+          <FieldInput label="Precio" value={pkg.price as string} onChange={(v) => { pkg.price = v; update() }} />
+          <FieldInput label="Descripción" value={pkg.description as string} onChange={(v) => { pkg.description = v; update() }} />
+          <FieldTextarea label="Features (una por línea)" value={(pkg.features as string[]).join('\n')} onChange={(v) => { pkg.features = v.split('\n'); update() }} rows={4} />
+        </div>
+      ))}
+
+      <SectionTitle>CTA</SectionTitle>
+      <FieldInput label="Título" value={cta.title as string} onChange={(v) => { cta.title = v; update() }} />
+      <FieldTextarea label="Descripción" value={cta.description as string} onChange={(v) => { cta.description = v; update() }} />
+      <FieldInput label="Botón Label" value={(cta.button as Record<string, string>).label} onChange={(v) => { (cta.button as Record<string, string>).label = v; update() }} />
+
+      <SectionTitle>Formulario Demo</SectionTitle>
+      <FieldInput label="Título" value={demoForm.title as string} onChange={(v) => { demoForm.title = v; update() }} />
+      <FieldTextarea label="Subtítulo" value={demoForm.subtitle as string} onChange={(v) => { demoForm.subtitle = v; update() }} />
+
+      <SectionTitle>FAQ</SectionTitle>
+      <FieldInput label="Título de sección" value={faq.title} onChange={(v) => { faq.title = v; update() }} />
+      {faq.items.map((item, i) => (
+        <div key={i} className="bg-brand-800/50 p-3 space-y-2 border border-brand-700">
+          <FieldInput label="Pregunta" value={item.question} onChange={(v) => { item.question = v; update() }} />
+          <FieldTextarea label="Respuesta" value={item.answer} onChange={(v) => { item.answer = v; update() }} rows={3} />
+        </div>
+      ))}
+
+      <SaveButton onClick={() => onSave(local)} saving={saving} />
+    </div>
+  )
+}
+
+/* ---- Categories Editor ---- */
+function CategoriesEditor({ data, onSave, saving }: EditorProps) {
+  const [local, setLocal] = useState(JSON.parse(JSON.stringify(data)))
+  const pages = local.pages as Record<string, Record<string, unknown>>
+
+  function update() { setLocal({ ...local }) }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-bold text-white">Editar Categorías</h2>
+        <SaveButton onClick={() => onSave(local)} saving={saving} />
+      </div>
+
+      {Object.entries(pages).map(([slug, page]) => (
+        <div key={slug} className="border border-brand-700 p-4 space-y-3">
+          <SectionTitle>{page.title as string}</SectionTitle>
+          <FieldInput label="Título" value={page.title as string} onChange={(v) => { page.title = v; update() }} />
+          <FieldTextarea label="Subtítulo" value={page.subtitle as string} onChange={(v) => { page.subtitle = v; update() }} />
+          <FieldTextarea label="Overview" value={page.overview as string} onChange={(v) => { page.overview = v; update() }} rows={3} />
+          <FieldTextarea
+            label="Qué obtendrás (uno por línea)"
+            value={(page.whatYouGet as string[]).join('\n')}
+            onChange={(v) => { page.whatYouGet = v.split('\n'); update() }}
+            rows={5}
+          />
+        </div>
+      ))}
+
+      <SaveButton onClick={() => onSave(local)} saving={saving} />
+    </div>
+  )
+}
+
+/* ---- Contact Editor ---- */
+function ContactEditor({ data, onSave, saving }: EditorProps) {
+  const [local, setLocal] = useState(JSON.parse(JSON.stringify(data)))
+  const hero = local.hero as Record<string, string>
+  const form = local.form as Record<string, unknown>
+  const cta = local.cta as Record<string, unknown>
+
+  function update() { setLocal({ ...local }) }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-bold text-white">Editar Contacto</h2>
+        <SaveButton onClick={() => onSave(local)} saving={saving} />
+      </div>
+
+      <SectionTitle>Hero</SectionTitle>
+      <FieldInput label="Título" value={hero.title} onChange={(v) => { hero.title = v; update() }} />
+      <FieldInput label="Subtítulo" value={hero.subtitle} onChange={(v) => { hero.subtitle = v; update() }} />
+
+      <SectionTitle>Formulario</SectionTitle>
+      <FieldInput label="Título" value={form.title as string} onChange={(v) => { form.title = v; update() }} />
+      <FieldTextarea label="Descripción" value={form.description as string} onChange={(v) => { form.description = v; update() }} />
+      <FieldInput label="Nota" value={form.note as string} onChange={(v) => { form.note = v; update() }} />
+
+      <SectionTitle>CTA</SectionTitle>
+      <FieldInput label="Título" value={cta.title as string} onChange={(v) => { cta.title = v; update() }} />
+      <FieldTextarea label="Descripción" value={cta.description as string} onChange={(v) => { cta.description = v; update() }} />
+      <FieldInput label="Botón Label" value={(cta.button as Record<string, string>).label} onChange={(v) => { (cta.button as Record<string, string>).label = v; update() }} />
+
+      <SaveButton onClick={() => onSave(local)} saving={saving} />
+    </div>
+  )
+}
+
+/* ---- Order Editor ---- */
+function OrderEditor({ data, onSave, saving }: EditorProps) {
+  const [local, setLocal] = useState(JSON.parse(JSON.stringify(data)))
+  const hero = local.hero as Record<string, string>
+  const form = local.form as Record<string, unknown>
+  const cta = local.cta as Record<string, unknown>
+
+  function update() { setLocal({ ...local }) }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-bold text-white">Editar Orden</h2>
+        <SaveButton onClick={() => onSave(local)} saving={saving} />
+      </div>
+
+      <SectionTitle>Hero</SectionTitle>
+      <FieldInput label="Título" value={hero.title} onChange={(v) => { hero.title = v; update() }} />
+      <FieldTextarea label="Descripción" value={hero.description} onChange={(v) => { hero.description = v; update() }} />
+
+      <SectionTitle>Formulario</SectionTitle>
+      <FieldInput label="Botón Submit" value={form.submitLabel as string} onChange={(v) => { form.submitLabel = v; update() }} />
+      <FieldInput label="Badge" value={form.badge as string} onChange={(v) => { form.badge = v; update() }} />
+
+      <SectionTitle>CTA</SectionTitle>
+      <FieldInput label="Título" value={cta.title as string} onChange={(v) => { cta.title = v; update() }} />
+      <FieldTextarea label="Descripción" value={cta.description as string} onChange={(v) => { cta.description = v; update() }} />
+      <FieldInput label="Botón Label" value={(cta.button as Record<string, string>).label} onChange={(v) => { (cta.button as Record<string, string>).label = v; update() }} />
+
+      <SaveButton onClick={() => onSave(local)} saving={saving} />
+    </div>
+  )
+}
+
+/* ---- Portfolio Editor ---- */
+function PortfolioEditor({ data, onSave, saving }: EditorProps) {
+  const [local, setLocal] = useState(JSON.parse(JSON.stringify(data)))
+  const hero = local.hero as Record<string, string>
+  const showcase = local.showcase as Record<string, unknown>
+
+  function update() { setLocal({ ...local }) }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-bold text-white">Editar Portafolio</h2>
+        <SaveButton onClick={() => onSave(local)} saving={saving} />
+      </div>
+
+      <SectionTitle>Hero</SectionTitle>
+      <FieldInput label="Título" value={hero.title} onChange={(v) => { hero.title = v; update() }} />
+      <FieldTextarea label="Subtítulo" value={hero.subtitle} onChange={(v) => { hero.subtitle = v; update() }} />
+
+      <SectionTitle>Showcase</SectionTitle>
+      <FieldInput label="Título" value={showcase.title as string} onChange={(v) => { showcase.title = v; update() }} />
+      <FieldTextarea label="Descripción" value={showcase.description as string} onChange={(v) => { showcase.description = v; update() }} rows={4} />
+
+      <SaveButton onClick={() => onSave(local)} saving={saving} />
+    </div>
+  )
+}

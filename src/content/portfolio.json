@@ -1,0 +1,20 @@
+{
+  "hero": {
+    "title": "PORTAFOLIO",
+    "subtitle": "Presentando el portafolio de E-LAB, donde la creatividad se encuentra con la visión y las identidades visuales se convierten en parte atemporal de los legados de nuestros clientes."
+  },
+  "showcase": {
+    "title": "PORTAFOLIO: UNA SINFONÍA DE IDENTIDADES VISUALES",
+    "description": "Bienvenido al portafolio de E-LAB, donde la creatividad se encuentra con la estrategia y las identidades visuales se convierten en parte fundamental del éxito de nuestros clientes. Nuestra galería es un testimonio de las diversas industrias con las que hemos tenido el placer de trabajar.",
+    "sections": [
+      "Logotipos Corporativos: En el ámbito empresarial, hemos creado logotipos que reflejan la energía profesional y la visión contemporánea de cada marca.",
+      "Logos de Bandas: El rock, metal y todos los géneros encuentran representación en nuestro portafolio. Nuestros diseñadores capturan la esencia de cada género musical.",
+      "Identidad Visual: Para quienes buscan un sistema completo de marca, nuestro portafolio muestra diseños que reflejan la naturaleza integral de cada proyecto.",
+      "Diseño Minimalista: Diseños limpios y elegantes que demuestran que menos es más."
+    ]
+  },
+  "gallery": {
+    "tabs": ["TODOS", "CORPORATIVO", "BANDAS", "MINIMALISTA", "MERCH", "BRANDING"],
+    "images": []
+  }
+}

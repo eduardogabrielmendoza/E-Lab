@@ -1,0 +1,20 @@
+{
+  "hero": {
+    "title": "HAGAMOS TU LOGOTIPO PERSONALIZADO",
+    "description": "No dejes que una fuente genérica arruine tu imagen profesional. Completa el formulario para convertir la esencia de tu marca en un emblema de alto impacto. Cuéntanos tu historia y nosotros nos encargamos del resto."
+  },
+  "form": {
+    "fields": {
+      "name": "Tu Nombre *",
+      "country": "País",
+      "email": "Tu Email *"
+    },
+    "submitLabel": "PROCEDER A INFORMACIÓN DEL LOGO",
+    "badge": "Servicio personalizado para cada cliente"
+  },
+  "cta": {
+    "title": "¿PREFIERES DISCUTIR EL PROYECTO PRIMERO?",
+    "description": "Haz clic en el botón de abajo para llenar un formulario que abrirá la puerta a discutir el proyecto con nosotros si no estás 100% seguro de hacer el pedido.",
+    "button": { "label": "CONVERSEMOS", "href": "/contacto" }
+  }
+}
