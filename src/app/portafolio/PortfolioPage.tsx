@@ -50,10 +50,15 @@ export default function PortfolioPage({ data }: { data: any }) {
     function onKey(e: KeyboardEvent) {
       if (e.key === 'Escape') closeLightbox()
     }
+    function onWheel(e: WheelEvent) {
+      e.preventDefault()
+    }
     window.addEventListener('keydown', onKey)
+    window.addEventListener('wheel', onWheel, { passive: false })
     return () => {
       document.body.style.overflow = ''
       window.removeEventListener('keydown', onKey)
+      window.removeEventListener('wheel', onWheel)
     }
   }, [lightbox, closeLightbox])
 

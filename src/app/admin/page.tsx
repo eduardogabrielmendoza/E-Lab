@@ -258,7 +258,7 @@ export default function AdminPage() {
                 style={viewMode === 'mobile' ? { border: '8px solid #262626', borderRadius: '24px' } : {}}
               >
                 <iframe
-                  src={previewUrls[activeSection]}
+                  src={`${previewUrls[activeSection]}?_t=${previewKey}`}
                   className="w-full h-full border-0"
                   key={`${viewMode}-${previewKey}`}
                   title="Vista previa"

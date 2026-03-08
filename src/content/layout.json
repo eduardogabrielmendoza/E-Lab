@@ -13,7 +13,6 @@
       { "label": "EXPLORAR", "href": "/#explorar" },
       { "label": "PORTAFOLIO", "href": "/portafolio" },
       { "label": "PRECIOS", "href": "/#paquetes" },
-      { "label": "BLOG", "href": "/blog" },
       { "label": "CONTACTO", "href": "/contacto" }
     ],
     "cta": {
