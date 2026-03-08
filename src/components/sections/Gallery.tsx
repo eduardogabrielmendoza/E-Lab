@@ -7,7 +7,8 @@ import { SlideUp, StaggerContainer, StaggerItem } from '@/components/animations'
 export default function Gallery({ data }: { data: any }) {
   const gallery = data
   const images: string[] = gallery.images || []
-  const placeholders = images.length > 0 ? images : Array.from({ length: 10 }, () => '')
+  const showPlaceholders = gallery.showPlaceholders !== false
+  const placeholders = images.length > 0 ? images : (showPlaceholders ? Array.from({ length: 10 }, () => '') : [])
 
   return (
     <section className="py-20 sm:py-28 bg-brand-900">

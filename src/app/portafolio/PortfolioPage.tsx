@@ -23,7 +23,8 @@ export default function PortfolioPage({ data }: { data: any }) {
     : allImages.filter((img) => img.tag?.toUpperCase() === tabs[activeTab]?.toUpperCase())
 
   const displayImages = filteredImages.length > 0 ? filteredImages : []
-  const placeholderCount = displayImages.length === 0 ? 18 : 0
+  const showPlaceholders = gallery.showPlaceholders !== false
+  const placeholderCount = displayImages.length === 0 && showPlaceholders ? 18 : 0
 
   return (
     <PageTransition>

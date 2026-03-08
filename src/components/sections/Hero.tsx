@@ -70,6 +70,7 @@ export default function Hero({ data }: { data: any }) {
           </motion.div>
 
           {/* Placeholder images row */}
+          {(hero.images?.length > 0 || hero.showPlaceholders !== false) && (
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
@@ -91,6 +92,7 @@ export default function Hero({ data }: { data: any }) {
               </div>
             ))}
           </motion.div>
+          )}
         </div>
       </div>
     </section>

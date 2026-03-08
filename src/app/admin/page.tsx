@@ -634,6 +634,14 @@ function HomeEditor({ data, onSave, onUpload, saving }: EditorProps) {
         <ToggleSwitch label="FAQ" checked={faq.visible !== false} onChange={(v) => { faq.visible = v; update() }} />
       </div>
 
+      <SectionTitle>Placeholders de Imágenes</SectionTitle>
+      <p className="text-xs text-brand-500 -mt-3 mb-2">Muestra u oculta los recuadros grises cuando no hay imágenes subidas.</p>
+      <div className="bg-brand-800/50 p-4 border border-brand-700 space-y-1">
+        <ToggleSwitch label="Placeholders del Hero (3 imágenes)" checked={(hero.showPlaceholders as boolean) !== false} onChange={(v) => { hero.showPlaceholders = v; update() }} />
+        <ToggleSwitch label="Placeholders de Categorías" checked={(cats as Record<string, unknown>).showPlaceholders !== false} onChange={(v) => { (cats as Record<string, unknown>).showPlaceholders = v; update() }} />
+        <ToggleSwitch label="Placeholders de Galería" checked={(gallery as Record<string, unknown>).showPlaceholders !== false} onChange={(v) => { (gallery as Record<string, unknown>).showPlaceholders = v; update() }} />
+      </div>
+
       {/* Hero */}
       <SectionTitle>Hero</SectionTitle>
       <FieldInput label="Título" value={hero.title as string} onChange={(v) => { hero.title = v; update() }} />
@@ -751,6 +759,12 @@ function CategoriesEditor({ data, onSave, onUpload, saving }: EditorProps) {
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold text-white">Editar Categorías</h2>
         <SaveButton onClick={() => onSave(local)} saving={saving} />
+      </div>
+
+      <SectionTitle>Placeholders de Imágenes</SectionTitle>
+      <p className="text-xs text-brand-500 -mt-3 mb-2">Controla los recuadros grises en todas las páginas de categorías cuando no hay imágenes.</p>
+      <div className="bg-brand-800/50 p-4 border border-brand-700 space-y-1">
+        <ToggleSwitch label="Mostrar placeholders en categorías" checked={local.showPlaceholders !== false} onChange={(v) => { local.showPlaceholders = v; update() }} />
       </div>
 
       {Object.entries(pages).map(([slug, page]) => (
@@ -890,6 +904,7 @@ function PortfolioEditor({ data, onSave, onUpload, saving }: EditorProps) {
       <SectionTitle>Visibilidad</SectionTitle>
       <div className="bg-brand-800/50 p-4 border border-brand-700 space-y-1">
         <ToggleSwitch label="Sección Showcase/Descripción" checked={(showcase.visible as boolean) !== false} onChange={(v) => { showcase.visible = v; update() }} />
+        <ToggleSwitch label="Placeholders del Logofolio" checked={(gallery as Record<string, unknown>).showPlaceholders !== false} onChange={(v) => { (gallery as Record<string, unknown>).showPlaceholders = v; update() }} />
       </div>
 
       <SectionTitle>Hero</SectionTitle>

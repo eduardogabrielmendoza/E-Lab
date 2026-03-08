@@ -20,5 +20,5 @@ export default function Page({ params }: Props) {
   const homeData = getHomeContent()
   const page = categoriesData.pages[params.slug as keyof typeof categoriesData.pages]
   if (!page) notFound()
-  return <CategoryPage data={page} slug={params.slug} allPages={categoriesData.pages} homeData={homeData} />
+  return <CategoryPage data={page} slug={params.slug} allPages={categoriesData.pages} homeData={homeData} showPlaceholders={categoriesData.showPlaceholders} />
 }

@@ -15,6 +15,7 @@
     ]
   },
   "gallery": {
+    "showPlaceholders": true,
     "tabs": ["CORPORATIVO", "BANDAS", "MINIMALISTA", "MERCH", "BRANDING"],
     "images": []
   }

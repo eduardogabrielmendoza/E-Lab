@@ -15,9 +15,9 @@ interface CategoryData {
 }
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export default function CategoryPage({ data, slug, allPages, homeData }: { data: CategoryData; slug: string; allPages: any; homeData: any }) {
+export default function CategoryPage({ data, slug, allPages, homeData, showPlaceholders }: { data: CategoryData; slug: string; allPages: any; homeData: any; showPlaceholders?: boolean }) {
   const galleryImages = data.gallery || []
-  const placeholders = galleryImages.length > 0 ? galleryImages : Array.from({ length: 8 }, () => '')
+  const placeholders = galleryImages.length > 0 ? galleryImages : (showPlaceholders !== false ? Array.from({ length: 8 }, () => '') : [])
 
   return (
     <PageTransition>
@@ -55,6 +55,7 @@ export default function CategoryPage({ data, slug, allPages, homeData }: { data:
           </div>
 
           {/* Hero images placeholders */}
+          {(data.heroImages?.length > 0 || showPlaceholders !== false) && (
           <div className="mt-12 grid grid-cols-3 gap-3">
             {[1, 2, 3].map((i) => (
               <div key={i} className="aspect-[4/3] bg-brand-800 border border-brand-700 flex items-center justify-center">
@@ -64,6 +65,7 @@ export default function CategoryPage({ data, slug, allPages, homeData }: { data:
               </div>
             ))}
           </div>
+          )}
         </div>
       </section>
 

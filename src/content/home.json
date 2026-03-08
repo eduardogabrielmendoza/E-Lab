@@ -1,6 +1,7 @@
 {
   "hero": {
     "visible": true,
+    "showPlaceholders": true,
     "title": "Logotipos y diseño grafico 100% originales.",
     "subtitle": "Sin plantillas, sin IA, diseños hecho a mano que comprenden tu visión.",
     "cta1": { "label": "Ver Precios", "href": "#paquetes" },
@@ -13,6 +14,7 @@
   },
   "categories": {
     "visible": true,
+    "showPlaceholders": true,
     "title": "Explora los servicios",
     "items": [
       {
@@ -135,6 +137,7 @@
   },
   "gallery": {
     "visible": true,
+    "showPlaceholders": true,
     "title": "TRABAJOS RECIENTES",
     "images": []
   },
