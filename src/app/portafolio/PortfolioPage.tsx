@@ -150,7 +150,7 @@ export default function PortfolioPage({ data }: { data: any }) {
                       src={item.url}
                       alt={item.text || `Portafolio ${idx + 1}`}
                       fill
-                      className="object-contain p-6"
+                      className="object-contain p-2"
                       sizes="(max-width:1024px) 100vw,50vw"
                     />
                     <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
