@@ -1,6 +1,8 @@
 import Hero from '@/components/sections/Hero'
 import Marquee from '@/components/sections/Marquee'
 import Categories from '@/components/sections/Categories'
+
+export const dynamic = 'force-dynamic'
 import HowItWorks from '@/components/sections/HowItWorks'
 import Packages from '@/components/sections/Packages'
 import Gallery from '@/components/sections/Gallery'

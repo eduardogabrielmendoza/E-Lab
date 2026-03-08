@@ -74,19 +74,6 @@ export default function Footer({ data }: { data: any }) {
             >
               {footer.contact.email}
             </a>
-            <div className="flex gap-4 mt-4">
-              {footer.contact.socials.map((social: any) => (
-                <a
-                  key={social.platform}
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-brand-400 hover:text-white transition-colors text-sm font-medium"
-                >
-                  {social.platform}
-                </a>
-              ))}
-            </div>
           </SlideUp>
         </div>
       </div>

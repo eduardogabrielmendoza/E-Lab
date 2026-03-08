@@ -46,16 +46,23 @@ export default function PortfolioPage({ data }: { data: any }) {
 
   useEffect(() => {
     if (!lightbox) return
+    document.body.style.overflow = 'hidden'
     function onKey(e: KeyboardEvent) {
       if (e.key === 'Escape') closeLightbox()
     }
     window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    return () => {
+      document.body.style.overflow = ''
+      window.removeEventListener('keydown', onKey)
+    }
   }, [lightbox, closeLightbox])
 
   function handleWheel(e: React.WheelEvent) {
     e.preventDefault()
-    setZoom((z) => Math.min(Math.max(z + (e.deltaY > 0 ? -0.2 : 0.2), 0.5), 5))
+    setZoom((z) => {
+      const delta = e.deltaY > 0 ? -0.1 : 0.1
+      return Math.min(Math.max(z + delta, 0.5), 5)
+    })
   }
 
   function handleMouseDown(e: React.MouseEvent) {
@@ -66,7 +73,12 @@ export default function PortfolioPage({ data }: { data: any }) {
 
   function handleMouseMove(e: React.MouseEvent) {
     if (!dragging) return
-    setPan({ x: e.clientX - dragStart.x, y: e.clientY - dragStart.y })
+    const dx = e.clientX - dragStart.x
+    const dy = e.clientY - dragStart.y
+    setPan((prev) => ({
+      x: prev.x + (dx - prev.x) * 0.3,
+      y: prev.y + (dy - prev.y) * 0.3,
+    }))
   }
 
   function handleMouseUp() {
@@ -246,9 +258,10 @@ export default function PortfolioPage({ data }: { data: any }) {
             style={{ cursor: dragging ? 'grabbing' : 'grab' }}
           >
             <div
-              className="relative transition-transform duration-100"
+              className="relative"
               style={{
                 transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
+                transition: dragging ? 'none' : 'transform 0.25s cubic-bezier(0.25, 0.4, 0.25, 1)',
                 maxWidth: '90vw',
                 maxHeight: '85vh',
                 width: '100%',

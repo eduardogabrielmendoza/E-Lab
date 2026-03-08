@@ -2,6 +2,8 @@ import { Metadata } from 'next'
 import OrderPage from './OrderPage'
 import { getOrderContent } from '@/lib/content'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Ordenar | E-LAB',
   description: 'Ordena tu logotipo personalizado diseñado por profesionales.',

@@ -49,10 +49,7 @@
       "title": "CONTACTO",
       "location": "Gracias por confiar en nosotros",
       "email": "eduardogabrielm3ndoza@gmail.com",
-      "socials": [
-        { "platform": "Instagram", "url": "#", "icon": "instagram" },
-        { "platform": "Behance", "url": "#", "icon": "behance" }
-      ]
+      "socials": []
     },
     "copyright": "E-Labs © 2026"
   }

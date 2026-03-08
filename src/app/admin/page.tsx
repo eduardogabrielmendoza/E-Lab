@@ -427,6 +427,49 @@ function ImageArrayField({ label, images, onUpload, onRemove }: { label: string;
   )
 }
 
+/* ---- Array Utility Components ---- */
+
+function moveItem<T>(arr: T[], from: number, to: number): void {
+  if (to < 0 || to >= arr.length) return
+  const [item] = arr.splice(from, 1)
+  arr.splice(to, 0, item)
+}
+
+function ArrayControls({ index, total, onMove, onRemove }: { index: number; total: number; onMove: (from: number, to: number) => void; onRemove: (i: number) => void }) {
+  return (
+    <div className="flex items-center gap-0.5">
+      <button
+        onClick={() => onMove(index, index - 1)}
+        disabled={index === 0}
+        className="w-7 h-7 flex items-center justify-center text-brand-400 hover:text-white disabled:opacity-30 transition-colors rounded hover:bg-brand-700"
+        title="Mover arriba"
+      >↑</button>
+      <button
+        onClick={() => onMove(index, index + 1)}
+        disabled={index === total - 1}
+        className="w-7 h-7 flex items-center justify-center text-brand-400 hover:text-white disabled:opacity-30 transition-colors rounded hover:bg-brand-700"
+        title="Mover abajo"
+      >↓</button>
+      <button
+        onClick={() => onRemove(index)}
+        className="w-7 h-7 flex items-center justify-center text-red-400 hover:text-red-300 transition-colors rounded hover:bg-red-900/30"
+        title="Eliminar"
+      >×</button>
+    </div>
+  )
+}
+
+function AddButton({ label, onClick }: { label: string; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className="w-full py-2.5 border border-dashed border-brand-600 text-brand-500 hover:text-white hover:border-brand-400 text-xs font-medium transition-colors flex items-center justify-center gap-2 rounded"
+    >
+      <span>+</span> {label}
+    </button>
+  )
+}
+
 const PORTFOLIO_TAGS = ['CORPORATIVO', 'BANDAS', 'MINIMALISTA', 'MERCH', 'BRANDING']
 
 interface PortfolioImage {
@@ -443,6 +486,12 @@ function PortfolioImageField({ images, onUpload, onColorUpload, onRemove, onUpda
   onRemove: (i: number) => void
   onUpdate: (i: number, field: 'tag' | 'text' | 'colorUrl', value: string) => void
 }) {
+  function onMove(from: number, to: number) {
+    moveItem(images, from, to)
+    // Trigger re-render by calling onUpdate with no change
+    if (images[to]) onUpdate(to, 'text', images[to].text)
+  }
+
   return (
     <div>
       <label className="block text-xs font-medium text-brand-400 mb-2">Imágenes del Logofolio ({images.length})</label>
@@ -450,15 +499,29 @@ function PortfolioImageField({ images, onUpload, onColorUpload, onRemove, onUpda
         {images.map((img, i) => (
           <div key={i} className="flex gap-3 bg-brand-800/50 p-3 border border-brand-700 rounded">
             <div className="shrink-0 space-y-2">
+              {/* Reorder + remove controls */}
+              <div className="flex items-center justify-center gap-0.5 mb-1">
+                <button
+                  onClick={() => onMove(i, i - 1)}
+                  disabled={i === 0}
+                  className="w-6 h-6 flex items-center justify-center text-brand-400 hover:text-white disabled:opacity-30 transition-colors rounded text-xs hover:bg-brand-700"
+                  title="Mover arriba"
+                >↑</button>
+                <button
+                  onClick={() => onMove(i, i + 1)}
+                  disabled={i === images.length - 1}
+                  className="w-6 h-6 flex items-center justify-center text-brand-400 hover:text-white disabled:opacity-30 transition-colors rounded text-xs hover:bg-brand-700"
+                  title="Mover abajo"
+                >↓</button>
+                <button
+                  onClick={() => onRemove(i)}
+                  className="w-6 h-6 flex items-center justify-center text-red-400 hover:text-red-300 transition-colors rounded text-xs hover:bg-red-900/30"
+                  title="Eliminar"
+                >×</button>
+              </div>
               {/* Main image */}
               <div className="relative w-28 h-10 bg-brand-800 border border-brand-700 overflow-hidden rounded group">
                 <img src={img.url} alt="" className="w-full h-full object-contain" />
-                <button
-                  onClick={() => onRemove(i)}
-                  className="absolute top-0 right-0 bg-red-600 text-white w-5 h-5 text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  ×
-                </button>
               </div>
               {/* Color version preview */}
               {img.colorUrl ? (
@@ -564,11 +627,18 @@ function HeaderEditor({ data, onSave, onUpload, saving }: EditorProps) {
 
       <SectionTitle>Links de Navegación</SectionTitle>
       {links.map((link, i) => (
-        <div key={i} className="flex gap-2">
-          <FieldInput label="Label" value={link.label} onChange={(v) => { link.label = v; update() }} />
-          <FieldInput label="Href" value={link.href} onChange={(v) => { link.href = v; update() }} />
+        <div key={i} className="bg-brand-800/50 p-3 border border-brand-700 space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-brand-400">Link {i + 1}</span>
+            <ArrayControls index={i} total={links.length} onMove={(from, to) => { moveItem(links, from, to); update() }} onRemove={(idx) => { links.splice(idx, 1); update() }} />
+          </div>
+          <div className="flex gap-2">
+            <FieldInput label="Label" value={link.label} onChange={(v) => { link.label = v; update() }} />
+            <FieldInput label="Href" value={link.href} onChange={(v) => { link.href = v; update() }} />
+          </div>
         </div>
       ))}
+      <AddButton label="Agregar link de navegación" onClick={() => { links.push({ label: 'Nuevo', href: '/' }); update() }} />
 
       <SectionTitle>Botón CTA</SectionTitle>
       <FieldInput label="Label" value={cta.label} onChange={(v) => { cta.label = v; update() }} />
@@ -587,6 +657,7 @@ function FooterEditor({ data, onSave, saving }: EditorProps) {
   const categories = footer.categories as { title: string; links: Array<Record<string, string>> }
   const menu = footer.menu as { title: string; links: Array<Record<string, string>> }
   const contact = footer.contact as Record<string, unknown>
+  const socials = (contact.socials || []) as Array<Record<string, string>>
 
   function update() { setLocal(JSON.parse(JSON.stringify(local))) }
 
@@ -604,19 +675,49 @@ function FooterEditor({ data, onSave, saving }: EditorProps) {
       <SectionTitle>Categorías</SectionTitle>
       <FieldInput label="Título de sección" value={categories.title} onChange={(v) => { categories.title = v; update() }} />
       {categories.links.map((link, i) => (
-        <div key={i} className="flex gap-2">
-          <FieldInput label="Label" value={link.label} onChange={(v) => { link.label = v; update() }} />
-          <FieldInput label="Href" value={link.href} onChange={(v) => { link.href = v; update() }} />
+        <div key={i} className="bg-brand-800/50 p-3 border border-brand-700 space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-brand-400">Link {i + 1}</span>
+            <ArrayControls index={i} total={categories.links.length} onMove={(from, to) => { moveItem(categories.links, from, to); update() }} onRemove={(idx) => { categories.links.splice(idx, 1); update() }} />
+          </div>
+          <div className="flex gap-2">
+            <FieldInput label="Label" value={link.label} onChange={(v) => { link.label = v; update() }} />
+            <FieldInput label="Href" value={link.href} onChange={(v) => { link.href = v; update() }} />
+          </div>
         </div>
       ))}
+      <AddButton label="Agregar link de categoría" onClick={() => { categories.links.push({ label: 'Nuevo', href: '/' }); update() }} />
 
       <SectionTitle>Menú</SectionTitle>
+      <FieldInput label="Título de sección" value={menu.title || ''} onChange={(v) => { menu.title = v; update() }} />
       {menu.links.map((link, i) => (
-        <div key={i} className="flex gap-2">
-          <FieldInput label="Label" value={link.label} onChange={(v) => { link.label = v; update() }} />
-          <FieldInput label="Href" value={link.href} onChange={(v) => { link.href = v; update() }} />
+        <div key={i} className="bg-brand-800/50 p-3 border border-brand-700 space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-brand-400">Link {i + 1}</span>
+            <ArrayControls index={i} total={menu.links.length} onMove={(from, to) => { moveItem(menu.links, from, to); update() }} onRemove={(idx) => { menu.links.splice(idx, 1); update() }} />
+          </div>
+          <div className="flex gap-2">
+            <FieldInput label="Label" value={link.label} onChange={(v) => { link.label = v; update() }} />
+            <FieldInput label="Href" value={link.href} onChange={(v) => { link.href = v; update() }} />
+          </div>
         </div>
       ))}
+      <AddButton label="Agregar link de menú" onClick={() => { menu.links.push({ label: 'Nuevo', href: '/' }); update() }} />
+
+      <SectionTitle>Redes Sociales</SectionTitle>
+      {socials.map((social, i) => (
+        <div key={i} className="bg-brand-800/50 p-3 border border-brand-700 space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-brand-400">Red {i + 1}</span>
+            <ArrayControls index={i} total={socials.length} onMove={(from, to) => { moveItem(socials, from, to); update() }} onRemove={(idx) => { socials.splice(idx, 1); contact.socials = socials; update() }} />
+          </div>
+          <div className="flex gap-2">
+            <FieldInput label="Plataforma" value={social.platform || social.label || ''} onChange={(v) => { social.platform = v; social.label = v; update() }} />
+            <FieldInput label="URL" value={social.url || social.href || ''} onChange={(v) => { social.url = v; social.href = v; update() }} />
+          </div>
+        </div>
+      ))}
+      <AddButton label="Agregar red social" onClick={() => { socials.push({ platform: 'Instagram', label: 'Instagram', url: 'https://instagram.com/', href: 'https://instagram.com/' }); contact.socials = socials; update() }} />
 
       <SectionTitle>Contacto</SectionTitle>
       <FieldInput label="Ubicación" value={contact.location as string} onChange={(v) => { contact.location = v; update() }} />
@@ -695,6 +796,10 @@ function HomeEditor({ data, onSave, onUpload, saving }: EditorProps) {
       <FieldInput label="Título de sección" value={cats.title} onChange={(v) => { cats.title = v; update() }} />
       {cats.items.map((item, i) => (
         <div key={i} className="bg-brand-800/50 p-3 space-y-2 border border-brand-700">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-brand-400">Categoría {i + 1}</span>
+            <ArrayControls index={i} total={cats.items.length} onMove={(from, to) => { moveItem(cats.items, from, to); update() }} onRemove={(idx) => { cats.items.splice(idx, 1); update() }} />
+          </div>
           <FieldInput label="Título" value={item.title as string} onChange={(v) => { item.title = v; update() }} />
           <FieldInput label="Slug" value={item.slug as string} onChange={(v) => { item.slug = v; update() }} />
           <FieldTextarea label="Descripción" value={item.description as string} onChange={(v) => { item.description = v; update() }} rows={2} />
@@ -708,22 +813,33 @@ function HomeEditor({ data, onSave, onUpload, saving }: EditorProps) {
           )}
         </div>
       ))}
+      <AddButton label="Agregar categoría" onClick={() => { cats.items.push({ title: 'Nueva Categoría', slug: 'nueva-categoria', description: '', image: '' }); update() }} />
 
       {/* How it works */}
       <SectionTitle>Cómo Funciona</SectionTitle>
       <FieldInput label="Título de sección" value={howItWorks.title} onChange={(v) => { howItWorks.title = v; update() }} />
       {howItWorks.steps.map((step, i) => (
         <div key={i} className="bg-brand-800/50 p-3 space-y-2 border border-brand-700">
-          <FieldInput label={`Paso ${step.number} - Título`} value={step.title} onChange={(v) => { step.title = v; update() }} />
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-brand-400">Paso {i + 1}</span>
+            <ArrayControls index={i} total={howItWorks.steps.length} onMove={(from, to) => { moveItem(howItWorks.steps, from, to); update() }} onRemove={(idx) => { howItWorks.steps.splice(idx, 1); update() }} />
+          </div>
+          <FieldInput label="Número" value={step.number} onChange={(v) => { step.number = v; update() }} />
+          <FieldInput label="Título" value={step.title} onChange={(v) => { step.title = v; update() }} />
           <FieldTextarea label="Descripción" value={step.description} onChange={(v) => { step.description = v; update() }} rows={2} />
         </div>
       ))}
+      <AddButton label="Agregar paso" onClick={() => { howItWorks.steps.push({ number: String(howItWorks.steps.length + 1), title: 'Nuevo paso', description: '' }); update() }} />
 
       {/* Packages */}
       <SectionTitle>Paquetes</SectionTitle>
       <FieldInput label="Título de sección" value={packages.title} onChange={(v) => { packages.title = v; update() }} />
       {packages.items.map((pkg, i) => (
         <div key={i} className="bg-brand-800/50 p-3 space-y-2 border border-brand-700">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-brand-400">Paquete {i + 1}</span>
+            <ArrayControls index={i} total={packages.items.length} onMove={(from, to) => { moveItem(packages.items, from, to); update() }} onRemove={(idx) => { packages.items.splice(idx, 1); update() }} />
+          </div>
           <FieldInput label="Nombre" value={pkg.name as string} onChange={(v) => { pkg.name = v; update() }} />
           <FieldInput label="Precio" value={pkg.price as string} onChange={(v) => { pkg.price = v; update() }} />
           <FieldInput label="Descripción" value={pkg.description as string} onChange={(v) => { pkg.description = v; update() }} />
@@ -736,6 +852,7 @@ function HomeEditor({ data, onSave, onUpload, saving }: EditorProps) {
           </label>
         </div>
       ))}
+      <AddButton label="Agregar paquete" onClick={() => { packages.items.push({ name: 'Nuevo Paquete', price: '$0', description: '', features: ['Feature 1'], cta: { label: 'Ordenar', href: '/ordenar' }, popular: false }); update() }} />
 
       {/* Gallery */}
       <SectionTitle>Galería - Trabajos Recientes</SectionTitle>
@@ -767,10 +884,15 @@ function HomeEditor({ data, onSave, onUpload, saving }: EditorProps) {
       <FieldInput label="Título de sección" value={faq.title} onChange={(v) => { faq.title = v; update() }} />
       {faq.items.map((item, i) => (
         <div key={i} className="bg-brand-800/50 p-3 space-y-2 border border-brand-700">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-brand-400">Pregunta {i + 1}</span>
+            <ArrayControls index={i} total={faq.items.length} onMove={(from, to) => { moveItem(faq.items, from, to); update() }} onRemove={(idx) => { faq.items.splice(idx, 1); update() }} />
+          </div>
           <FieldInput label="Pregunta" value={item.question} onChange={(v) => { item.question = v; update() }} />
           <FieldTextarea label="Respuesta" value={item.answer} onChange={(v) => { item.answer = v; update() }} rows={3} />
         </div>
       ))}
+      <AddButton label="Agregar pregunta" onClick={() => { faq.items.push({ question: 'Nueva pregunta', answer: 'Respuesta...' }); update() }} />
 
       <SaveButton onClick={() => onSave(local)} saving={saving} />
     </div>

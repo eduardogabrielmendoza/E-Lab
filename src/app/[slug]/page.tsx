@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation'
 import { getCategoriesContent, getHomeContent } from '@/lib/content'
 import CategoryPage from './CategoryPage'
 
+export const dynamic = 'force-dynamic'
+
 type Props = { params: { slug: string } }
 
 export function generateMetadata({ params }: Props): Metadata {
