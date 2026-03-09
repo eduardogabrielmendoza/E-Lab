@@ -7,12 +7,38 @@ import Image from 'next/image'
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export default function Hero({ data }: { data: any }) {
   const hero = data
+  const videoOpacity = hero.videoOpacity ?? 0.4
+  const vignetteOpacity = hero.vignetteOpacity ?? 0.6
 
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-brand-black">
-      {/* Background gradient */}
+      {/* Video Background */}
+      {hero.videoUrl && (
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ opacity: videoOpacity }}
+        >
+          <source src={hero.videoUrl} type="video/mp4" />
+        </video>
+      )}
+
+      {/* Fallback gradient (shows when no video or behind video) */}
       <div className="absolute inset-0 bg-gradient-to-b from-brand-900 via-brand-black to-brand-black" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-brand-700/20 via-transparent to-transparent" />
+
+      {/* Vignette overlay */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: `radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,${vignetteOpacity}) 100%)`,
+        }}
+      />
+
+      {/* Top & bottom fade for seamless blend */}
+      <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-brand-black/60 via-transparent to-brand-black" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
         <div className="text-center max-w-4xl mx-auto">
@@ -23,7 +49,7 @@ export default function Hero({ data }: { data: any }) {
             transition={{ duration: 0.5 }}
             className="inline-block mb-6"
           >
-            <span className="text-xs sm:text-sm font-medium text-brand-300 tracking-widest border border-brand-600 px-4 py-2 rounded-full">
+            <span className="text-xs sm:text-sm font-medium text-brand-300 tracking-widest border border-brand-600 px-4 py-2 rounded-full backdrop-blur-sm">
               {hero.badge}
             </span>
           </motion.div>
@@ -33,7 +59,7 @@ export default function Hero({ data }: { data: any }) {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-white leading-[1.05]"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-white leading-[1.05] drop-shadow-lg"
           >
             {hero.title}
           </motion.h1>
@@ -43,7 +69,7 @@ export default function Hero({ data }: { data: any }) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="mt-6 text-base sm:text-lg md:text-xl text-brand-300 max-w-2xl mx-auto leading-relaxed"
+            className="mt-6 text-base sm:text-lg md:text-xl text-brand-300 max-w-2xl mx-auto leading-relaxed drop-shadow-md"
           >
             {hero.subtitle}
           </motion.p>
@@ -63,7 +89,7 @@ export default function Hero({ data }: { data: any }) {
             </Link>
             <Link
               href={hero.cta2.href}
-              className="border border-brand-400 text-white px-8 py-4 text-sm font-bold tracking-wider hover:bg-white hover:text-brand-black transition-all hover:scale-105"
+              className="border border-brand-400 text-white px-8 py-4 text-sm font-bold tracking-wider hover:bg-white hover:text-brand-black transition-all hover:scale-105 backdrop-blur-sm"
             >
               {hero.cta2.label}
             </Link>
