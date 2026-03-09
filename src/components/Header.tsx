@@ -49,8 +49,18 @@ export default function Header({ data }: { data: any }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 sm:h-20">
             {/* Logo */}
-            <Link href="/" className="text-2xl sm:text-3xl font-black tracking-tighter text-white">
-              {nav.logo.text}
+            <Link href="/" className="flex items-center">
+              {nav.logo.image ? (
+                <img
+                  src={nav.logo.image}
+                  alt={nav.logo.text || 'Logo'}
+                  className="h-8 sm:h-10 w-auto object-contain"
+                />
+              ) : (
+                <span className="text-2xl sm:text-3xl font-black tracking-tighter text-white">
+                  {nav.logo.text}
+                </span>
+              )}
             </Link>
 
             {/* Desktop Nav */}

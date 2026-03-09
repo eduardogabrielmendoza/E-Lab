@@ -12,8 +12,7 @@
     "links": [
       { "label": "EXPLORAR", "href": "/#explorar" },
       { "label": "PORTAFOLIO", "href": "/portafolio" },
-      { "label": "PRECIOS", "href": "/#paquetes" },
-      { "label": "CONTACTO", "href": "/contacto" }
+      { "label": "PRECIOS", "href": "/#paquetes" }
     ],
     "cta": {
       "label": "CONTACTO",
