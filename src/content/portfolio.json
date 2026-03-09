@@ -8,15 +8,15 @@
     "title": "Una sinfonia de identidades visuales",
     "description": "Bienvenido/a a E-Labs, donde la creatividad se encuentra con la estrategia y las identidades visuales se convierten en parte fundamental del éxito de los clientes.",
     "sections": [
-      "Logotipos Corporativos: En el ámbito empresarial, hemos creado logotipos que reflejan la energía profesional y la visión contemporánea de cada marca.",
-      "Logos de Bandas: El rock, metal y todos los géneros encuentran representación en nuestro portafolio. Nuestros diseñadores capturan la esencia de cada género musical.",
+      "Emblemas: En el ámbito empresarial, hemos creado emblemas que reflejan la energía profesional y la visión contemporánea de cada marca.",
+      "Artistas: El rock, metal y todos los géneros encuentran representación en nuestro portafolio. Nuestros diseñadores capturan la esencia de cada artista.",
       "Identidad Visual: Para quienes buscan un sistema completo de marca, nuestro portafolio muestra diseños que reflejan la naturaleza integral de cada proyecto.",
-      "Diseño Minimalista: Diseños limpios y elegantes que demuestran que menos es más."
+      "Marcas: Diseños limpios y elegantes que demuestran que menos es más."
     ]
   },
   "gallery": {
     "showPlaceholders": true,
-    "tabs": ["CORPORATIVO", "BANDAS", "MINIMALISTA", "MERCH", "BRANDING"],
+    "tabs": ["EMBLEMAS", "ARTISTAS", "MARCAS", "MERCH", "BRANDING"],
     "images": []
   }
 }

@@ -134,7 +134,7 @@ export default function AdminPage() {
     header: '/',
     footer: '/',
     home: '/',
-    categories: '/logos-corporativos',
+    categories: '/emblemas',
     contact: '/contacto',
     order: '/ordenar',
     portfolio: '/portafolio',
@@ -470,7 +470,7 @@ function AddButton({ label, onClick }: { label: string; onClick: () => void }) {
   )
 }
 
-const PORTFOLIO_TAGS = ['CORPORATIVO', 'BANDAS', 'MINIMALISTA', 'MERCH', 'BRANDING']
+const PORTFOLIO_TAGS = ['EMBLEMAS', 'ARTISTAS', 'MARCAS', 'MERCH', 'BRANDING']
 
 interface PortfolioImage {
   url: string

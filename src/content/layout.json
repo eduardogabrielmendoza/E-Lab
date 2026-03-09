@@ -28,9 +28,9 @@
     "categories": {
       "title": "Diseño Grafico",
       "links": [
-        { "label": "Logotipos Corporativos", "href": "/logos-corporativos" },
-        { "label": "Logotipos para Bandas", "href": "/logos-de-bandas" },
-        { "label": "Logotipos Minimalistas", "href": "/logos-minimalistas" },
+        { "label": "Emblemas", "href": "/emblemas" },
+        { "label": "Artistas", "href": "/artistas" },
+        { "label": "Marcas", "href": "/marcas" },
         { "label": "Identidad Visual", "href": "/identidad-visual" },
         { "label": "Merchandising", "href": "/diseno-merch" },
         { "label": "Branding", "href": "/branding" }

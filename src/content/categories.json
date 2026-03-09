@@ -1,13 +1,13 @@
 {
   "showPlaceholders": true,
   "pages": {
-    "logos-corporativos": {
-      "title": "LOGOS CORPORATIVOS",
-      "subtitle": "Obtén logotipos corporativos diseñados por diseñadores de clase mundial que entienden el poder de la representación visual de una marca en el mundo empresarial.",
+    "emblemas": {
+      "title": "EMBLEMAS",
+      "subtitle": "Emblemas diseñados por diseñadores de clase mundial que entienden el poder de la representación visual de una marca en el mundo empresarial.",
       "heroImages": [],
-      "overview": "Nuestros logotipos corporativos son diseñados para transmitir profesionalismo, confianza y la esencia de tu empresa. Cada diseño es único y creado desde cero.",
+      "overview": "Nuestros emblemas son diseñados para transmitir profesionalismo, confianza y la esencia de tu empresa. Cada diseño es único y creado desde cero.",
       "whatYouGet": [
-        "Logotipos PNG transparentes en alta resolución con diseño en blanco y negro",
+        "Emblemas PNG transparentes en alta resolución con diseño en blanco y negro",
         "Wallpapers cuadrados con elementos texturizados",
         "Fotos para redes sociales con diseños texturizados",
         "Diseño de logo a color opcional",
@@ -18,15 +18,15 @@
         "Tiempo estimado de entrega: 3-7 días"
       ],
       "gallery": [],
-      "relatedCategories": ["logos-minimalistas", "identidad-visual", "branding"]
+      "relatedCategories": ["marcas", "identidad-visual", "branding"]
     },
-    "logos-de-bandas": {
-      "title": "LOGOS DE BANDAS",
-      "subtitle": "Logotipos únicos para bandas y músicos que buscan una identidad visual poderosa y memorable.",
+    "artistas": {
+      "title": "ARTISTAS",
+      "subtitle": "Diseños visuales únicos para artistas y músicos que buscan una identidad poderosa y memorable.",
       "heroImages": [],
-      "overview": "Especializados en crear logotipos que capturan la esencia sonora de tu banda. Desde rock hasta metal, cada diseño refleja tu género y personalidad musical.",
+      "overview": "Especializados en crear identidades visuales que capturan la esencia de cada artista. Desde rock hasta metal, cada diseño refleja tu género y personalidad musical.",
       "whatYouGet": [
-        "Logotipos PNG transparentes en alta resolución",
+        "Diseños PNG transparentes en alta resolución",
         "Diseño blanco y negro adaptable a cualquier fondo",
         "Wallpapers para redes sociales",
         "Archivos fuente editables (.svg, .ai, .psd)",
@@ -38,13 +38,13 @@
       "gallery": [],
       "relatedCategories": ["diseno-merch", "branding"]
     },
-    "logos-minimalistas": {
-      "title": "LOGOS MINIMALISTAS",
+    "marcas": {
+      "title": "MARCAS",
       "subtitle": "Diseños limpios, modernos y con impacto visual máximo. Menos es más.",
       "heroImages": [],
-      "overview": "El minimalismo en el diseño de logos transmite elegancia y sofisticación. Creamos logotipos que comunican la esencia de tu marca con la menor cantidad de elementos posible.",
+      "overview": "El diseño de marcas transmite elegancia y sofisticación. Creamos identidades que comunican la esencia de tu marca con la menor cantidad de elementos posible.",
       "whatYouGet": [
-        "Logotipos PNG transparentes en alta resolución",
+        "Diseños PNG transparentes en alta resolución",
         "Variaciones horizontales y verticales",
         "Favicon y versiones reducidas",
         "Archivos fuente editables",
@@ -53,7 +53,7 @@
         "Entrega en 3-5 días"
       ],
       "gallery": [],
-      "relatedCategories": ["logos-corporativos", "identidad-visual"]
+      "relatedCategories": ["emblemas", "identidad-visual"]
     },
     "identidad-visual": {
       "title": "IDENTIDAD VISUAL",
@@ -72,7 +72,7 @@
         "Entrega en 7-14 días"
       ],
       "gallery": [],
-      "relatedCategories": ["logos-corporativos", "branding"]
+      "relatedCategories": ["emblemas", "branding"]
     },
     "diseno-merch": {
       "title": "DISEÑO DE MERCH",
@@ -89,7 +89,7 @@
         "Entrega en 5-7 días"
       ],
       "gallery": [],
-      "relatedCategories": ["logos-de-bandas", "branding"]
+      "relatedCategories": ["artistas", "branding"]
     },
     "branding": {
       "title": "BRANDING COMPLETO",
@@ -108,7 +108,7 @@
         "Entrega en 10-21 días"
       ],
       "gallery": [],
-      "relatedCategories": ["identidad-visual", "logos-corporativos", "diseno-merch"]
+      "relatedCategories": ["identidad-visual", "emblemas", "diseno-merch"]
     }
   }
 }

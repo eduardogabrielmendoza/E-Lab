@@ -32,22 +32,22 @@
     "title": "Explora los servicios",
     "items": [
       {
-        "title": "Logotipos Corporativos",
-        "slug": "logos-corporativos",
+        "title": "Emblemas",
+        "slug": "emblemas",
         "image": "",
-        "description": "Logotipos para empresas y marcas."
+        "description": "Emblemas únicos que representan la esencia de tu marca."
       },
       {
-        "title": "Logotipos para Bandas",
-        "slug": "logos-de-bandas",
+        "title": "Artistas",
+        "slug": "artistas",
         "image": "",
-        "description": "Logotipos únicos para bandas y artistas."
+        "description": "Diseños visuales para artistas y músicos."
       },
       {
-        "title": "Logotipos Minimalistas",
-        "slug": "logos-minimalistas",
+        "title": "Marcas",
+        "slug": "marcas",
         "image": "",
-        "description": "Diseños limpios y modernos con impacto visual."
+        "description": "Identidades de marca limpias y modernas."
       },
       {
         "title": "Identidad Visual",
