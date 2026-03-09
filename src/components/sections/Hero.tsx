@@ -12,33 +12,33 @@ export default function Hero({ data }: { data: any }) {
 
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-brand-black">
-      {/* Video Background */}
+      {/* Base gradient (behind everything) */}
+      <div className="absolute inset-0 z-0 bg-gradient-to-b from-brand-900 via-brand-black to-brand-black" />
+
+      {/* Video Background - on top of base gradient */}
       {hero.videoUrl && (
         <video
           autoPlay
           loop
           muted
           playsInline
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 z-[1] w-full h-full object-cover"
           style={{ opacity: videoOpacity }}
         >
           <source src={hero.videoUrl} type="video/mp4" />
         </video>
       )}
 
-      {/* Fallback gradient (shows when no video or behind video) */}
-      <div className="absolute inset-0 bg-gradient-to-b from-brand-900 via-brand-black to-brand-black" />
-
-      {/* Vignette overlay */}
+      {/* Vignette overlay - on top of video */}
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-0 z-[2] pointer-events-none"
         style={{
           background: `radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,${vignetteOpacity}) 100%)`,
         }}
       />
 
       {/* Top & bottom fade for seamless blend */}
-      <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-brand-black/60 via-transparent to-brand-black" />
+      <div className="absolute inset-0 z-[3] pointer-events-none bg-gradient-to-b from-brand-black/70 via-transparent to-brand-black" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
         <div className="text-center max-w-4xl mx-auto">

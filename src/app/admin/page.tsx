@@ -733,8 +733,6 @@ function FooterEditor({ data, onSave, saving }: EditorProps) {
 function HomeEditor({ data, onSave, onUpload, saving }: EditorProps) {
   const [local, setLocal] = useState(JSON.parse(JSON.stringify(data)))
   const hero = local.hero as Record<string, unknown>
-  const stats = (local.stats || { visible: true, items: [] }) as { visible?: boolean; items: Array<Record<string, string>> }
-  if (!local.stats) local.stats = stats
   const marquee = local.marquee as Record<string, unknown> || { visible: true }
   const cats = local.categories as { visible?: boolean; title: string; items: Array<Record<string, unknown>> }
   const howItWorks = local.howItWorks as { visible?: boolean; title: string; steps: Array<Record<string, string>> }
@@ -742,8 +740,6 @@ function HomeEditor({ data, onSave, onUpload, saving }: EditorProps) {
   const gallery = local.gallery as { visible?: boolean; title: string; images: string[] }
   const cta = local.cta as Record<string, unknown>
   const demoForm = local.demoForm as Record<string, unknown>
-  const testimonials = (local.testimonials || { visible: true, title: '', subtitle: '', items: [] }) as { visible?: boolean; title: string; subtitle?: string; items: Array<Record<string, unknown>> }
-  if (!local.testimonials) local.testimonials = testimonials
   const faq = local.faq as { visible?: boolean; title: string; items: Array<Record<string, string>> }
 
   function update() { setLocal(JSON.parse(JSON.stringify(local))) }
@@ -759,7 +755,6 @@ function HomeEditor({ data, onSave, onUpload, saving }: EditorProps) {
       <SectionTitle>Visibilidad de Secciones</SectionTitle>
       <div className="bg-brand-800/50 p-4 border border-brand-700 space-y-1">
         <ToggleSwitch label="Hero" checked={hero.visible !== false} onChange={(v) => { hero.visible = v; update() }} />
-        <ToggleSwitch label="Stats (números)" checked={stats.visible !== false} onChange={(v) => { stats.visible = v; update() }} />
         <ToggleSwitch label="Marquee (cinta animada)" checked={marquee.visible !== false} onChange={(v) => { if (!local.marquee) local.marquee = {}; (local.marquee as Record<string, unknown>).visible = v; update() }} />
         {marquee.visible !== false && (
           <div className="ml-4 space-y-2 border-l-2 border-brand-700 pl-4 mt-1">
@@ -781,7 +776,6 @@ function HomeEditor({ data, onSave, onUpload, saving }: EditorProps) {
         <ToggleSwitch label="Galería Trabajos Recientes" checked={gallery.visible !== false} onChange={(v) => { gallery.visible = v; update() }} />
         <ToggleSwitch label="CTA - Ordena tu logotipo" checked={(cta.visible as boolean) !== false} onChange={(v) => { cta.visible = v; update() }} />
         <ToggleSwitch label="Demo / WhatsApp" checked={(demoForm.visible as boolean) !== false} onChange={(v) => { demoForm.visible = v; update() }} />
-        <ToggleSwitch label="Testimonios" checked={testimonials.visible !== false} onChange={(v) => { testimonials.visible = v; update() }} />
         <ToggleSwitch label="FAQ" checked={faq.visible !== false} onChange={(v) => { faq.visible = v; update() }} />
       </div>
 
@@ -824,24 +818,6 @@ function HomeEditor({ data, onSave, onUpload, saving }: EditorProps) {
           onRemove={(i) => { (hero.images as string[]).splice(i, 1); update() }}
         />
       )}
-
-      {/* Stats */}
-      <SectionTitle>Stats / Números</SectionTitle>
-      {stats.items.map((stat, i) => (
-        <div key={i} className="bg-brand-800/50 p-3 space-y-2 border border-brand-700">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-brand-400">Stat {i + 1}</span>
-            <ArrayControls index={i} total={stats.items.length} onMove={(from, to) => { moveItem(stats.items, from, to); update() }} onRemove={(idx) => { stats.items.splice(idx, 1); update() }} />
-          </div>
-          <div className="grid grid-cols-3 gap-2">
-            <FieldInput label="Prefijo" value={stat.prefix || ''} onChange={(v) => { stat.prefix = v; update() }} />
-            <FieldInput label="Valor" value={stat.value} onChange={(v) => { stat.value = v; update() }} />
-            <FieldInput label="Sufijo" value={stat.suffix || ''} onChange={(v) => { stat.suffix = v; update() }} />
-          </div>
-          <FieldInput label="Label" value={stat.label} onChange={(v) => { stat.label = v; update() }} />
-        </div>
-      ))}
-      <AddButton label="Agregar stat" onClick={() => { stats.items.push({ value: '0', prefix: '+', suffix: '', label: 'Nuevo stat' }); update() }} />
 
       {/* Categories */}
       <SectionTitle>Categorías</SectionTitle>
@@ -930,27 +906,6 @@ function HomeEditor({ data, onSave, onUpload, saving }: EditorProps) {
       <FieldInput label="Título" value={demoForm.title as string} onChange={(v) => { demoForm.title = v; update() }} />
       <FieldTextarea label="Subtítulo" value={demoForm.subtitle as string} onChange={(v) => { demoForm.subtitle = v; update() }} />
       <FieldInput label="Mensaje de WhatsApp" value={demoForm.whatsappMessage as string || ''} onChange={(v) => { demoForm.whatsappMessage = v; update() }} />
-
-      {/* Testimonials */}
-      <SectionTitle>Testimonios</SectionTitle>
-      <FieldInput label="Título" value={testimonials.title || ''} onChange={(v) => { testimonials.title = v; update() }} />
-      <FieldInput label="Subtítulo" value={testimonials.subtitle || ''} onChange={(v) => { testimonials.subtitle = v; update() }} />
-      {testimonials.items.map((t, i) => (
-        <div key={i} className="bg-brand-800/50 p-3 space-y-2 border border-brand-700">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-brand-400">Testimonio {i + 1}</span>
-            <ArrayControls index={i} total={testimonials.items.length} onMove={(from, to) => { moveItem(testimonials.items, from, to); update() }} onRemove={(idx) => { testimonials.items.splice(idx, 1); update() }} />
-          </div>
-          <FieldInput label="Nombre" value={t.name as string || ''} onChange={(v) => { t.name = v; update() }} />
-          <FieldInput label="Rol / Empresa" value={t.role as string || ''} onChange={(v) => { t.role = v; update() }} />
-          <FieldTextarea label="Cita" value={t.quote as string || ''} onChange={(v) => { t.quote = v; update() }} rows={3} />
-          <div>
-            <label className="block text-xs text-brand-500 mb-1">Rating: {(t.rating as number) || 5} estrellas</label>
-            <input type="range" min={1} max={5} step={1} value={(t.rating as number) || 5} onChange={(e) => { t.rating = Number(e.target.value); update() }} className="w-full accent-white h-1.5" />
-          </div>
-        </div>
-      ))}
-      <AddButton label="Agregar testimonio" onClick={() => { testimonials.items.push({ name: 'Nuevo Cliente', role: '', quote: 'Excelente servicio...', rating: 5 }); update() }} />
 
       {/* FAQ */}
       <SectionTitle>FAQ</SectionTitle>
