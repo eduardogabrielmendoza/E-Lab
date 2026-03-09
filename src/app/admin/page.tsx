@@ -798,7 +798,100 @@ function HomeEditor({ data, onSave, onUpload, saving }: EditorProps) {
       <FieldInput label="CTA 2 Href" value={(hero.cta2 as Record<string, string>).href} onChange={(v) => { (hero.cta2 as Record<string, string>).href = v; update() }} />
 
       <SectionTitle>Video de Fondo del Hero</SectionTitle>
-      <FieldInput label="URL del video (ruta local o URL)" value={(hero.videoUrl as string) || ''} onChange={(v) => { hero.videoUrl = v; update() }} />
+      {(() => {
+        /* eslint-disable react-hooks/rules-of-hooks */
+        const [videoUploading, setVideoUploading] = useState(false)
+        const [videoProgress, setVideoProgress] = useState(0)
+        const [videoMsg, setVideoMsg] = useState<{ text: string; type: 'success' | 'error' } | null>(null)
+        /* eslint-enable react-hooks/rules-of-hooks */
+
+        const handleVideoUpload = () => {
+          const input = document.createElement('input')
+          input.type = 'file'
+          input.accept = 'video/mp4,video/webm,video/ogg'
+          input.onchange = async () => {
+            const file = input.files?.[0]
+            if (!file) return
+            setVideoUploading(true)
+            setVideoProgress(0)
+            setVideoMsg(null)
+
+            const formData = new FormData()
+            formData.append('file', file)
+
+            const xhr = new XMLHttpRequest()
+            xhr.upload.addEventListener('progress', (e) => {
+              if (e.lengthComputable) {
+                setVideoProgress(Math.round((e.loaded / e.total) * 100))
+              }
+            })
+            xhr.addEventListener('load', () => {
+              setVideoUploading(false)
+              if (xhr.status >= 200 && xhr.status < 300) {
+                try {
+                  const data = JSON.parse(xhr.responseText)
+                  hero.videoUrl = data.url
+                  update()
+                  setVideoMsg({ text: '✓ Video cargado exitosamente', type: 'success' })
+                } catch {
+                  setVideoMsg({ text: 'Error al procesar la respuesta', type: 'error' })
+                }
+              } else {
+                try {
+                  const data = JSON.parse(xhr.responseText)
+                  setVideoMsg({ text: data.error || 'Error al subir video', type: 'error' })
+                } catch {
+                  setVideoMsg({ text: 'Error al subir video', type: 'error' })
+                }
+              }
+            })
+            xhr.addEventListener('error', () => {
+              setVideoUploading(false)
+              setVideoMsg({ text: 'Error de conexión al subir video', type: 'error' })
+            })
+            xhr.open('POST', '/api/upload')
+            xhr.send(formData)
+          }
+          input.click()
+        }
+
+        return (
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={handleVideoUpload}
+                disabled={videoUploading}
+                className="px-4 py-2 bg-white text-black text-xs font-bold rounded hover:bg-brand-200 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {videoUploading ? 'Subiendo...' : 'Cambiar Video'}
+              </button>
+              {(hero.videoUrl as string) && (
+                <span className="text-[10px] text-brand-500 truncate max-w-[200px]">{(hero.videoUrl as string).split('/').pop()}</span>
+              )}
+            </div>
+
+            {videoUploading && (
+              <div>
+                <div className="w-full bg-brand-800 rounded-full h-2 overflow-hidden">
+                  <div
+                    className="bg-white h-2 rounded-full transition-all duration-300 ease-out"
+                    style={{ width: `${videoProgress}%` }}
+                  />
+                </div>
+                <p className="text-[10px] text-brand-400 mt-1">{videoProgress}% subido</p>
+              </div>
+            )}
+
+            {videoMsg && (
+              <p className={`text-xs font-medium ${videoMsg.type === 'success' ? 'text-green-400' : 'text-red-400'}`}>
+                {videoMsg.text}
+              </p>
+            )}
+
+            <FieldInput label="URL del video (o pegar URL manualmente)" value={(hero.videoUrl as string) || ''} onChange={(v) => { hero.videoUrl = v; update() }} />
+          </div>
+        )
+      })()}
       <div>
         <label className="block text-xs text-brand-500 mb-1">Opacidad del video: {Math.round(((hero.videoOpacity as number) ?? 0.35) * 100)}%</label>
         <input type="range" min={0} max={100} step={5} value={Math.round(((hero.videoOpacity as number) ?? 0.35) * 100)} onChange={(e) => { hero.videoOpacity = Number(e.target.value) / 100; update() }} className="w-full accent-white h-1.5" />
