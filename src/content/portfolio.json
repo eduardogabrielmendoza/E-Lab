@@ -16,7 +16,7 @@
   },
   "gallery": {
     "showPlaceholders": true,
-    "tabs": ["EMBLEMAS", "ARTISTAS", "MARCAS", "MERCH", "BRANDING"],
+    "tabs": ["EMBLEMAS", "ARTISTAS", "MARCAS"],
     "images": []
   }
 }

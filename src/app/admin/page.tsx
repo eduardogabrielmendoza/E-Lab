@@ -470,7 +470,7 @@ function AddButton({ label, onClick }: { label: string; onClick: () => void }) {
   )
 }
 
-const PORTFOLIO_TAGS = ['EMBLEMAS', 'ARTISTAS', 'MARCAS', 'MERCH', 'BRANDING']
+const PORTFOLIO_TAGS = ['EMBLEMAS', 'ARTISTAS', 'MARCAS']
 
 interface PortfolioImage {
   url: string
