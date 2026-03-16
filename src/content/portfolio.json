@@ -16,7 +16,7 @@
   },
   "gallery": {
     "showPlaceholders": true,
-    "tabs": ["EMBLEMAS", "ARTISTAS", "MARCAS"],
+    "tabs": ["EMBLEMAS", "ARTISTAS", "MARCAS", "ARTWORK"],
     "images": []
   }
 }
